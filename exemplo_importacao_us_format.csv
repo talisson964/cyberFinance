@@ -1,0 +1,5 @@
+data,descrição,tipo,valor,forma de pagamento,quantidade de parcelas,valor por parcela,parcelas pagas
+11/18/2024,American Sale,entrada,500.00,cash,1,500.00,1
+12/25/2024,Christmas Purchase,saida,1200.00,credit card,1,1200.00,1
+01/15/2025,New Year Service,entrada,750.50,transfer,1,750.50,1
+02/28/2025,Valentine Expenses,saida,300.00,check,1,300.00,1

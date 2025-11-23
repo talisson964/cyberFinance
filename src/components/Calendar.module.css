@@ -1,0 +1,500 @@
+.fullCalendarContainer {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+}
+
+.calendarFullWrapper {
+  width: 100%;
+  height: 100%;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.calendarFullWrapper h1 {
+  text-align: center;
+  color: #333;
+  margin: 0 0 20px 0;
+  font-size: 2em;
+  font-weight: 600;
+}
+
+.calendarAndTooltip {
+  display: flex;
+  gap: 30px;
+  flex: 1;
+  align-items: flex-start;
+  position: relative;
+}
+
+.calendarWrapper {
+  flex: 1;
+  min-height: 500px;
+  position: relative;
+}
+
+/* Calendar Styling */
+:global(.react-calendar) {
+  width: 100%;
+  height: auto;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  box-shadow: none;
+  flex: 1;
+  min-height: 500px;
+}
+
+:global(.react-calendar button) {
+  margin: 4px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  background: white;
+  transition: all 0.3s ease;
+  font-size: 1.1em;
+  padding: 12px;
+  font-weight: 500;
+}
+
+:global(.react-calendar button:hover) {
+  background: #f5f5f5;
+  border-color: #2196f3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+:global(.react-calendar button:active) {
+  background: #e0e0e0;
+  transform: translateY(0);
+}
+
+:global(.react-calendar__month-view__weekdays) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-bottom: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  margin-bottom: 10px;
+}
+
+:global(.react-calendar__month-view__weekdays__weekday) {
+  color: white;
+  font-weight: 700;
+  text-align: center;
+  padding: 12px;
+  font-size: 1.05em;
+  text-transform: uppercase;
+}
+
+:global(.react-calendar__tile) {
+  padding: 50px 0 8px;
+  position: relative;
+  height: auto;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border: 2px solid #f0f0f0;
+  border-radius: 8px;
+  margin: 2px;
+  transition: all 0.3s ease;
+  background: white;
+  font-weight: 600;
+  font-size: 1.1em;
+  cursor: pointer;
+  overflow: visible !important;
+}
+
+.tileContentWrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+:global(.react-calendar__tile--neighboringMonth) {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+:global(.react-calendar__tile:hover) {
+  background: #f0f8ff;
+  border-color: #2196f3;
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(33, 150, 243, 0.25);
+}
+
+:global(.react-calendar__tile--active) {
+  background: #2196f3;
+  color: white;
+  border-color: #1976d2;
+}
+
+:global(.react-calendar__tile--active:hover) {
+  background: #1976d2;
+}
+
+:global(.react-calendar__tile.selected) {
+  background: #2196f3 !important;
+  color: white !important;
+  border-color: #1976d2 !important;
+}
+
+:global(.react-calendar__tile.today) {
+  background: #fff3cd;
+  border-color: #ffc107;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3);
+}
+
+:global(.react-calendar__tile.today:hover) {
+  background: #ffe082;
+}
+
+:global(.react-calendar__tile.hasEvents) {
+  background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+  border-color: #4caf50;
+}
+
+:global(.react-calendar__tile.hasEvents:hover) {
+  border-color: #4caf50;
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.25);
+}
+
+:global(.react-calendar__tile.hovered) {
+  background: linear-gradient(135deg, #e1f5fe 0%, #f1f5fe 100%);
+  border-color: #2196f3;
+  box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+}
+
+:global(.react-calendar__navigation) {
+  background: transparent;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+:global(.react-calendar__navigation button) {
+  color: #333;
+  font-weight: 600;
+  border-radius: 8px;
+  min-width: 50px;
+  padding: 10px;
+  background: white;
+  border: 2px solid #e0e0e0;
+}
+
+:global(.react-calendar__navigation button:hover) {
+  background: #f5f5f5;
+  border-color: #2196f3;
+}
+
+:global(.react-calendar__navigation__label) {
+  background: transparent;
+  cursor: pointer;
+  color: #333;
+  font-weight: 700;
+  font-size: 1.3em;
+  border: none !important;
+  padding: 10px 20px !important;
+}
+
+:global(.react-calendar__navigation__label:hover) {
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+:global(.react-calendar__navigation__prev-button),
+:global(.react-calendar__navigation__next-button) {
+  min-width: 50px;
+  padding: 10px !important;
+  background: white;
+  border: 2px solid #e0e0e0;
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
+:global(.react-calendar__navigation__prev-button:hover),
+:global(.react-calendar__navigation__next-button:hover) {
+  background: #f5f5f5;
+  border-color: #2196f3;
+}
+
+.tileIndicators {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.indicator {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  line-height: 18px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.indicator.receivable {
+  background: #4caf50;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+}
+
+.indicator.payable {
+  background: #f44336;
+  box-shadow: 0 2px 8px rgba(244, 67, 54, 0.4);
+}
+
+/* Inline Tooltip - aparece sobre a data */
+.inlineTooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  animation: tooltipSlideIn 0.2s ease;
+  pointer-events: none;
+}
+
+@keyframes tooltipSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.tooltipContent {
+  min-width: 250px;
+  max-width: 320px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  border: 2px solid #667eea;
+  overflow: hidden;
+}
+
+.tooltipContent::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #667eea;
+}
+
+.tooltipHeader {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 10px 14px;
+  font-weight: 700;
+  font-size: 0.95em;
+  text-transform: capitalize;
+  text-align: center;
+}
+
+.tooltipEvents {
+  padding: 8px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.tooltipEvents::-webkit-scrollbar {
+  width: 4px;
+}
+
+.tooltipEvents::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.tooltipEvents::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 2px;
+}
+
+.tooltipEventItem {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #f9f9f9;
+  margin-bottom: 6px;
+  font-size: 0.85em;
+  transition: background 0.2s;
+}
+
+.tooltipEventItem:hover {
+  background: #f0f0f0;
+}
+
+.tooltipEventItem:last-child {
+  margin-bottom: 0;
+}
+
+.tooltipIcon {
+  font-size: 1.1em;
+}
+
+.tooltipText {
+  color: #333;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tooltipAmount {
+  font-weight: 700;
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+.tooltipAmount.positive {
+  color: #4caf50;
+}
+
+.tooltipAmount.negative {
+  color: #f44336;
+}
+
+.tooltipMore {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  padding: 6px;
+  font-weight: 600;
+}
+
+/* Legend */
+.legendContainer {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #e0e0e0;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #666;
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+.legendIcon {
+  font-size: 1.3em;
+}
+
+.legendColor {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid #ddd;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .fullCalendarContainer {
+    padding: 10px;
+  }
+
+  .calendarFullWrapper {
+    padding: 15px;
+  }
+
+  .calendarFullWrapper h1 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+  }
+
+  .calendarAndTooltip {
+    gap: 15px;
+  }
+
+  .tooltipContainer {
+    min-width: 240px;
+    max-width: 280px;
+  }
+
+  :global(.react-calendar__tile) {
+    min-height: 70px;
+    padding: 35px 0 4px;
+    font-size: 0.9em;
+  }
+
+  :global(.react-calendar button) {
+    margin: 2px;
+    padding: 8px;
+    font-size: 0.95em;
+  }
+
+  .legendContainer {
+    gap: 10px;
+  }
+
+  .legendItem {
+    font-size: 0.85em;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendarFullWrapper {
+    padding: 10px;
+  }
+
+  .calendarFullWrapper h1 {
+    font-size: 1.2em;
+  }
+
+  .tooltipContainer {
+    min-width: 200px;
+    max-width: 250px;
+  }
+
+  :global(.react-calendar__tile) {
+    min-height: 60px;
+    padding: 30px 0 2px;
+    font-size: 0.8em;
+  }
+
+  :global(.react-calendar button) {
+    margin: 1px;
+    padding: 6px;
+    font-size: 0.85em;
+  }
+
+  .legendContainer {
+    gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirme seu Email - CyberFinance</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f7fafc;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .logo {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 10px 0 0 0;
+            font-size: 16px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 20px;
+            color: #1a202c;
+            margin: 0 0 20px 0;
+            font-weight: 600;
+        }
+        .message {
+            font-size: 16px;
+            color: #4a5568;
+            line-height: 1.6;
+            margin: 0 0 30px 0;
+        }
+        .button-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .confirm-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transition: transform 0.2s;
+        }
+        .confirm-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+        }
+        .alternative-link {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .alternative-link p {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #4a5568;
+        }
+        .link-text {
+            font-size: 12px;
+            color: #667eea;
+            word-break: break-all;
+            font-family: monospace;
+            background-color: #edf2f7;
+            padding: 8px;
+            border-radius: 4px;
+            display: block;
+        }
+        .info-box {
+            background-color: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 30px 0;
+        }
+        .info-box p {
+            margin: 0;
+            font-size: 14px;
+            color: #92400e;
+            line-height: 1.5;
+        }
+        .info-icon {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        .features {
+            display: table;
+            width: 100%;
+            margin: 30px 0;
+        }
+        .feature {
+            display: table-row;
+        }
+        .feature-icon {
+            display: table-cell;
+            padding: 12px 0;
+            font-size: 24px;
+            width: 50px;
+            vertical-align: middle;
+        }
+        .feature-text {
+            display: table-cell;
+            padding: 12px 0;
+            vertical-align: middle;
+        }
+        .feature-text strong {
+            display: block;
+            color: #1a202c;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .feature-text span {
+            color: #718096;
+            font-size: 14px;
+        }
+        .footer {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 30px;
+            text-align: center;
+        }
+        .footer p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .footer .brand {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+        .footer .copyright {
+            font-size: 12px;
+            color: #a0aec0;
+            margin-top: 20px;
+        }
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+            margin: 30px 0;
+        }
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+            .greeting {
+                font-size: 18px;
+            }
+            .message {
+                font-size: 15px;
+            }
+            .confirm-button {
+                padding: 14px 30px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">💼</div>
+            <h1>CyberFinance</h1>
+            <p>Gestão Financeira Inteligente</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <p class="greeting">Olá! 👋</p>
+            
+            <p class="message">
+                Seja bem-vindo(a) ao <strong>CyberFinance</strong>! Estamos muito felizes em tê-lo(a) conosco.
+            </p>
+            
+            <p class="message">
+                Para começar a usar nosso sistema de gestão financeira e ter acesso a todas as funcionalidades, 
+                precisamos confirmar seu endereço de email.
+            </p>
+
+            <!-- Confirm Button -->
+            <div class="button-container">
+                <a href="{{ .ConfirmationURL }}" class="confirm-button">
+                    ✉️ Confirmar Meu Email
+                </a>
+            </div>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <p>
+                    <span class="info-icon">⏰</span>
+                    <strong>Este link expira em 24 horas.</strong> Por favor, confirme seu email o quanto antes.
+                </p>
+            </div>
+
+            <!-- Alternative Link -->
+            <div class="alternative-link">
+                <p><strong>Problema ao clicar no botão?</strong></p>
+                <p>Copie e cole este link no seu navegador:</p>
+                <span class="link-text">{{ .ConfirmationURL }}</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Features -->
+            <p class="message" style="margin-bottom: 20px;">
+                <strong>O que você pode fazer no CyberFinance:</strong>
+            </p>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-text">
+                        <strong>Dashboard Completo</strong>
+                        <span>Visualize suas movimentações em gráficos intuitivos</span>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💳</div>
+                    <div class="feature-text">
+                        <strong>Gestão de Transações</strong>
+                        <span>Controle contas a pagar e receber com facilidade</span>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📁</div>
+                    <div class="feature-text">
+                        <strong>Exportação de Dados</strong>
+                        <span>Exporte relatórios em PDF, Excel e CSV</span>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-text">
+                        <strong>Segurança Total</strong>
+                        <span>Seus dados isolados e protegidos na nuvem</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <p class="message" style="font-size: 14px; color: #718096;">
+                Se você não criou uma conta no CyberFinance, pode ignorar este email com segurança.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p class="brand">💼 CyberFinance</p>
+            <p>Sistema de Gestão Financeira Profissional</p>
+            <p style="margin-top: 15px;">
+                Dúvidas? Entre em contato conosco!
+            </p>
+            <p class="copyright">
+                © 2025 CyberFinance. Criado por CyberLife. Todos os direitos reservados.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

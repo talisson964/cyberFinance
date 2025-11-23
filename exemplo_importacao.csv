@@ -1,0 +1,7 @@
+data,descrição,tipo,valor,forma de pagamento,quantidade de parcelas,valor por parcela,parcelas pagas
+18/11/2024,Venda de Produto A,entrada,150.00,dinheiro,1,150.00,1
+19/11/2024,Compra de Material,saida,85.50,débito,1,85.50,1
+20/11/2024,Serviço Consultoria,entrada,500.00,pix,3,166.67,2
+21/11/2024,Aluguel Loja,saida,1200.00,transferência,1,1200.00,1
+22/11/2024,Venda a Prazo,entrada,300.00,crédito,2,150.00,1
+23/11/2024,Compra Fornecedor,saida,450.00,boleto,1,450.00,1

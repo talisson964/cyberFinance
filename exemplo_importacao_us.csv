@@ -1,0 +1,5 @@
+data,descrição,tipo,valor,forma de pagamento,quantidade de parcelas,valor por parcela,parcelas pagas
+2024-11-18,Product Sales,entrada,1234.56,cash,1,1234.56,1
+2024-11-19,Material Purchase,saida,567.89,credit card,1,567.89,1
+2024-11-20,Service Revenue,entrada,2500.75,transfer,2,1250.375,1
+2024-11-21,Office Rent,saida,3000.00,check,1,3000.00,1

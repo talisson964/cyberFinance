@@ -1,0 +1,201 @@
+.container {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.totalBadge {
+  background: linear-gradient(135deg, var(--accent-color) 0%, #c9a532 100%);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.itemsList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.itemsList::-webkit-scrollbar-track {
+  background: #e2e8f0;
+  border-radius: 3px;
+}
+
+.itemsList::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 3px;
+}
+
+.itemsList::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.item:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.15);
+  transform: translateY(-1px);
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.itemName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.itemDetails {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.removeButton {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.removeButton:hover {
+  background: #fecaca;
+  border-color: #dc2626;
+  transform: scale(1.1);
+}
+
+.addForm {
+  display: grid;
+  grid-template-columns: 2fr 0.8fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.addForm input {
+  padding: 10px 12px;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.addForm input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+.inputName {
+  grid-column: 1;
+}
+
+.inputQuantity {
+  grid-column: 2;
+}
+
+.inputPrice {
+  grid-column: 3;
+}
+
+.addButton {
+  grid-column: 4;
+  background: linear-gradient(135deg, var(--accent-color) 0%, #c9a532 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(212, 175, 55, 0.3);
+}
+
+.addButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+}
+
+.addButton:active {
+  transform: translateY(0);
+}
+
+.emptyMessage {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  padding: 16px;
+  margin: 0;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .addForm {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .inputName,
+  .inputQuantity,
+  .inputPrice,
+  .addButton {
+    grid-column: 1;
+  }
+
+  .addButton {
+    padding: 12px;
+  }
+}

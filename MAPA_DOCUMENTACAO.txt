@@ -1,0 +1,325 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                ║
+║              📋 DOCUMENTAÇÃO v1.1.0 - GUIA DE NAVEGAÇÃO VISUAL                 ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 🎯 COMECE AQUI                                                                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📄 LEIA_ME_PRIMEIRO.txt ⭐⭐⭐
+   ├─ O que: Visão geral executiva do projeto
+   ├─ Tempo: 5-10 minutos
+   └─ Por quê: Para entender o que você tem agora
+
+📄 INICIAR_AGORA.md ⭐⭐⭐
+   ├─ O que: Quick start para rodar o servidor
+   ├─ Tempo: 5 minutos
+   └─ Por quê: Para ter o sistema rodando imediatamente
+
+📄 INDEX_DOCUMENTACAO.md ⭐⭐⭐
+   ├─ O que: Mapa e guia de navegação de documentos
+   ├─ Tempo: 5 minutos
+   └─ Por quê: Para encontrar o documento certo para sua necessidade
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 📚 DOCUMENTAÇÃO PRINCIPAL                                                      ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📄 README_v1.1.0.md
+   ├─ O que: Visão geral completa do projeto
+   ├─ Tempo: 15-20 minutos
+   ├─ Para quem: Todos que querem entender o sistema
+   ├─ Contém:
+   │  • Funcionalidades v1.0.0 + v1.1.0
+   │  • Stack tecnológico
+   │  • Estrutura de arquivos
+   │  • Como usar
+   │  • Stack tecnológico detalhado
+   │  • Dashboard explicado
+   │  • Tipos de movimentação
+   │  • Classificação de despesas
+   │  • Scripts disponíveis
+   │  • Troubleshooting
+   └─ Link: Arquivo principal do projeto
+
+📄 GUIA_V1.1.0.md
+   ├─ O que: Guia prático e detalhado de todas as funcionalidades
+   ├─ Tempo: 20-30 minutos (leitura + exploração)
+   ├─ Para quem: Usuários que querem explorar tudo que o sistema oferece
+   ├─ Contém:
+   │  • O que é novo na v1.1.0
+   │  • Explicação de cada tipo de movimentação (6 tipos)
+   │  • Classificação de despesas (Fixo/Temporário)
+   │  • Passo a passo com exemplos práticos
+   │  • Como usar o histórico com filtros
+   │  • Explicação do dashboard aprimorado
+   │  • Exemplos de casos de uso reais
+   │  • Informações de persistência de dados
+   │  • Troubleshooting
+   │  • Conceitos-chave explicados
+   │  • Próximas melhorias planejadas
+   └─ Melhor para: Usuários operacionais
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 🔍 DOCUMENTAÇÃO TÉCNICA                                                        ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📄 STATUS.txt
+   ├─ O que: Resumo técnico e estatísticas do projeto
+   ├─ Tempo: 10-15 minutos
+   ├─ Para quem: Desenvolvedores e arquitetos técnicos
+   ├─ Contém:
+   │  • Funcionalidades principais (v1.0.0 + v1.1.0)
+   │  • Stack tecnológico com versões
+   │  • Estrutura de arquivos detalhada
+   │  • Scripts disponíveis
+   │  • Como usar dados de exemplo
+   │  • Fluxo de uso do sistema
+   │  • Estatísticas (linhas, componentes, etc)
+   │  • Destaques
+   │  • Documentação disponível
+   │  • Status final
+   └─ Melhor para: Arquitetos e leads técnicos
+
+📄 ATUALIZACAO_V1.1.0.md
+   ├─ O que: Detalhes técnicos das mudanças de v1.0 para v1.1
+   ├─ Tempo: 20-25 minutos
+   ├─ Para quem: Desenvolvedores que querem entender o código
+   ├─ Contém:
+   │  • Resumo de novas funcionalidades
+   │  • Mudanças em cada arquivo
+   │  • Novos componentes criados
+   │  • Funções adicionadas
+   │  • Tipos TypeScript novos
+   │  • Guia de upgrade
+   │  • Compatibilidade backward
+   │  • Considerações de performance
+   │  • Como os dados são persistidos
+   │  • Exemplos de código
+   └─ Melhor para: Desenvolvedores técnicos
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 📊 RESUMOS EXECUTIVOS                                                          ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📄 RESUMO_V1.1.0.txt
+   ├─ O que: Visão geral completa com checklist
+   ├─ Tempo: 15-20 minutos
+   ├─ Para quem: Gerentes, product owners, leads
+   ├─ Contém:
+   │  • Resumo executivo
+   │  • Features implementadas (detalhado)
+   │  • Arquivos criados/modificados
+   │  • Estatísticas técnicas
+   │  • Documentação disponível
+   │  • Como usar (passo a passo)
+   │  • Checklist de validação completo ✅
+   │  • Exemplos de uso
+   │  • Destaques v1.1.0
+   │  • Roadmap futuro
+   │  • Status final
+   └─ Melhor para: Decision makers
+
+📄 CONCLUSAO_v1.1.0.txt
+   ├─ O que: Sumário de conclusão e entregas
+   ├─ Tempo: 10-15 minutos
+   ├─ Para quem: Todos que querem validar a conclusão
+   ├─ Contém:
+   │  • Missão cumprida
+   │  • O que foi entregue
+   │  • Funcionalidades implementadas
+   │  • Validação e testes
+   │  • Estatísticas finais
+   │  • Como começar
+   │  • Checklist final
+   │  • Destaques da implementação
+   │  • Conclusão
+   └─ Melhor para: Validação final
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 📚 DOCUMENTAÇÃO ORIGINAL v1.0.0                                                ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📄 GUIA.md
+   └─ Documentação completa da versão v1.0.0
+
+📄 COMO_USAR.md
+   └─ Guia prático da versão v1.0.0
+
+📄 IMPLEMENTACAO.md
+   └─ Sumário técnico da versão v1.0.0
+
+📄 README.md
+   └─ README original do projeto
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 🎯 ROTEIROS RECOMENDADOS POR PERFIL                                            ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+👤 USUÁRIO FINAL (Sem experiência técnica)
+   1. LEIA_ME_PRIMEIRO.txt (5 min)
+   2. INICIAR_AGORA.md (5 min)
+   3. Teste o sistema no navegador (10 min)
+   4. GUIA_V1.1.0.md (20 min)
+   └─ Total: ~40 minutos para estar operacional
+
+👨‍💻 DESENVOLVEDOR
+   1. README_v1.1.0.md (15 min)
+   2. STATUS.txt (10 min)
+   3. ATUALIZACAO_V1.1.0.md (20 min)
+   4. Explore src/ no IDE
+   5. INICIAR_AGORA.md (5 min)
+   6. npm run dev
+   └─ Total: ~60 minutos para entender arquitetura
+
+👔 GERENTE / PRODUCT OWNER
+   1. LEIA_ME_PRIMEIRO.txt (5 min)
+   2. RESUMO_V1.1.0.txt (15 min)
+   3. CONCLUSAO_v1.1.0.txt (10 min)
+   4. INDEX_DOCUMENTACAO.md (5 min)
+   └─ Total: ~35 minutos para visão executiva
+
+🔧 SUPORTE TÉCNICO / MANUTENÇÃO
+   1. INDEX_DOCUMENTACAO.md (5 min)
+   2. INICIAR_AGORA.md (5 min)
+   3. README_v1.1.0.md - Troubleshooting (10 min)
+   4. GUIA_V1.1.0.md - Troubleshooting (10 min)
+   5. STATUS.txt (10 min)
+   └─ Total: ~40 minutos para estar preparado
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 📖 SEQUÊNCIA LÓGICA DE LEITURA                                                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                         ┌─ LEIA_ME_PRIMEIRO.txt
+                         │
+                         ├─ INICIAR_AGORA.md
+                         │
+                         ├─ INDEX_DOCUMENTACAO.md
+                         │
+        ┌────────────────┼────────────────┬─────────────────────┐
+        │                │                │                     │
+        ▼                ▼                ▼                     ▼
+   Para Usuários    Para Devs       Para Técnicos        Para Revisão
+        │                │                │                     │
+        ▼                ▼                ▼                     ▼
+   GUIA_V1.1.0     STATUS.txt      ATUALIZACAO_        RESUMO_V1.1.0
+                                   V1.1.0.md
+        │                │                │
+        ▼                ▼                ▼
+   README_v1.1.0   Explorar        Roadmap
+   (referência)    código
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 🔍 BUSCA RÁPIDA - ENCONTRE RESPOSTAS                                           ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+"Como instalar e rodar?"
+└─ INICIAR_AGORA.md
+
+"Qual é a visão geral do projeto?"
+└─ README_v1.1.0.md
+
+"Como uso o sistema?"
+└─ GUIA_V1.1.0.md
+
+"O que é novo na v1.1.0?"
+└─ ATUALIZACAO_V1.1.0.md
+
+"Qual é o status técnico?"
+└─ STATUS.txt
+
+"Quero um resumo executivo"
+└─ RESUMO_V1.1.0.txt
+
+"Tudo foi implementado?"
+└─ CONCLUSAO_v1.1.0.txt
+
+"Como navego a documentação?"
+└─ INDEX_DOCUMENTACAO.md
+
+"Dicas rápidas"
+└─ LEIA_ME_PRIMEIRO.txt
+
+"Preciso de troubleshooting"
+└─ README_v1.1.0.md (seção Troubleshooting)
+└─ GUIA_V1.1.0.md (seção Troubleshooting)
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 📊 TABELA DE REFERÊNCIA                                                        ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+┌──────────────────────┬────────────────────┬──────────────┬────────────┐
+│ Tarefa               │ Arquivo            │ Tempo        │ Prioridade │
+├──────────────────────┼────────────────────┼──────────────┼────────────┤
+│ Começar agora        │ LEIA_ME_PRIMEIRO   │ 5 min        │ ⭐⭐⭐    │
+│ Instalar & rodar     │ INICIAR_AGORA      │ 5 min        │ ⭐⭐⭐    │
+│ Navegar docs         │ INDEX_DOCUMENTACAO │ 5 min        │ ⭐⭐⭐    │
+│ Entender sistema     │ README_v1.1.0      │ 15 min       │ ⭐⭐     │
+│ Usar operacional     │ GUIA_V1.1.0        │ 20 min       │ ⭐⭐     │
+│ Status técnico       │ STATUS.txt         │ 10 min       │ ⭐⭐     │
+│ O que mudou          │ ATUALIZACAO_V1.1.0 │ 20 min       │ ⭐⭐     │
+│ Resumo executivo     │ RESUMO_V1.1.0      │ 15 min       │ ⭐       │
+│ Validar conclusão    │ CONCLUSAO_v1.1.0   │ 10 min       │ ⭐       │
+└──────────────────────┴────────────────────┴──────────────┴────────────┘
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 💡 DICAS ÚTEIS                                                                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+• Use CTRL+F para procurar palavras-chave nos PDFs
+• Comece pelos documentos com ⭐⭐⭐
+• Teste o sistema enquanto lê
+• Consulte INDEX_DOCUMENTACAO.md se estiver perdido
+• Docs estão em markdown para fácil leitura
+• Todos os arquivos estão na raiz do projeto
+• Nenhuma dependência externa para ler docs
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ ✅ DOCUMENTAÇÃO DISPONÍVEL                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📋 Início Rápido:
+   ✅ LEIA_ME_PRIMEIRO.txt
+   ✅ INICIAR_AGORA.md
+   ✅ INDEX_DOCUMENTACAO.md
+
+📚 Documentação Completa:
+   ✅ README_v1.1.0.md
+   ✅ GUIA_V1.1.0.md
+   ✅ STATUS.txt
+   ✅ ATUALIZACAO_V1.1.0.md
+
+📊 Sumários:
+   ✅ RESUMO_V1.1.0.txt
+   ✅ CONCLUSAO_v1.1.0.txt
+
+📖 Referência (v1.0.0):
+   ✅ GUIA.md
+   ✅ COMO_USAR.md
+   ✅ IMPLEMENTACAO.md
+   ✅ README.md
+
+**Total: 13 arquivos de documentação**
+
+
+═══════════════════════════════════════════════════════════════════════════════════
+
+               🎯 ESCOLHA ONDE COMEÇAR E BOA LEITURA! 🎯
+
+        Sugestão: Comece com LEIA_ME_PRIMEIRO.txt (5 minutos)
+
+═══════════════════════════════════════════════════════════════════════════════════

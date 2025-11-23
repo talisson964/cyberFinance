@@ -1,0 +1,6 @@
+datas	descrição	tipo	categoria	valor	forma de pagamento	banco	quantidades de parcelas	parcelas pagas	valor por parcela
+23/11/2025	Compra de Material de Escritório	saida	Fornecedores	450.00	Cartão de Crédito	Nubank	3	0	150.00
+23/11/2025	Pagamento de Internet	saida	Utilidades	120.00	PIX		1	1	120.00
+22/11/2025	Venda de Produto	entrada	Vendas	1500.00	PIX		1	1	1500.00
+20/11/2025	Compra de Equipamentos	saida	Fornecedores	2400.00	Cartão de Crédito	Itaú	12	2	200.00
+19/11/2025	Aluguel Escritório	saida	Aluguel	3000.00	Boleto		1	0	3000.00

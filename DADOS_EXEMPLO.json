@@ -1,0 +1,52 @@
+{
+  "title": "Exemplos de Dados - Sistema de Caixa",
+  "description": "Dados de exemplo para testar o sistema",
+  "instructions": "Copie um dos JSONs abaixo e cole no console do navegador com: localStorage.setItem('caixa_transactions', '{JSON}'); location.reload();",
+  
+  "exemplo_simples": [
+    {
+      "id": "1000-0.5",
+      "type": "entrada",
+      "amount": 1500,
+      "category": "Venda",
+      "description": "Venda de produtos eletrônicos",
+      "date": "2025-11-15",
+      "timestamp": 1731600000000
+    },
+    {
+      "id": "1001-0.5",
+      "type": "saida",
+      "amount": 600,
+      "category": "Compra",
+      "description": "Compra de estoque mensal",
+      "date": "2025-11-15",
+      "timestamp": 1731603600000
+    },
+    {
+      "id": "1002-0.5",
+      "type": "entrada",
+      "amount": 800,
+      "category": "Serviço",
+      "description": "Consultoria de negócios",
+      "date": "2025-11-16",
+      "timestamp": 1731690000000
+    }
+  ],
+
+  "exemplo_completo_json": 
+  "[{\"id\":\"1700000001000-0.5\",\"type\":\"entrada\",\"amount\":1500,\"category\":\"Venda\",\"description\":\"Venda de produtos XYZ\",\"date\":\"2025-10-15\",\"timestamp\":1697304000000},{\"id\":\"1700000002000-0.5\",\"type\":\"saida\",\"amount\":600,\"category\":\"Compra\",\"description\":\"Compra de estoque mensal\",\"date\":\"2025-10-15\",\"timestamp\":1697307600000},{\"id\":\"1700000003000-0.5\",\"type\":\"entrada\",\"amount\":800,\"category\":\"Serviço\",\"description\":\"Consultoria de negócios\",\"date\":\"2025-10-16\",\"timestamp\":1697390400000},{\"id\":\"1700000004000-0.5\",\"type\":\"saida\",\"amount\":1200,\"category\":\"Aluguel\",\"description\":\"Aluguel do estabelecimento\",\"date\":\"2025-10-17\",\"timestamp\":1697476800000},{\"id\":\"1700000005000-0.5\",\"type\":\"entrada\",\"amount\":450,\"category\":\"Venda\",\"description\":\"Venda de acessórios\",\"date\":\"2025-10-18\",\"timestamp\":1697563200000},{\"id\":\"1700000006000-0.5\",\"type\":\"saida\",\"amount\":1500,\"category\":\"Salário\",\"description\":\"Pagamento funcionário\",\"date\":\"2025-10-19\",\"timestamp\":1697649600000},{\"id\":\"1700000007000-0.5\",\"type\":\"entrada\",\"amount\":200,\"category\":\"Devolução\",\"description\":\"Devolução de cliente\",\"date\":\"2025-10-20\",\"timestamp\":1697736000000},{\"id\":\"1700000008000-0.5\",\"type\":\"saida\",\"amount\":250,\"category\":\"Fornecedor\",\"description\":\"Pagamento fornecedor A\",\"date\":\"2025-10-21\",\"timestamp\":1697822400000},{\"id\":\"1700000009000-0.5\",\"type\":\"entrada\",\"amount\":1200,\"category\":\"Venda\",\"description\":\"Venda grande de semana\",\"date\":\"2025-11-01\",\"timestamp\":1698787200000},{\"id\":\"1700000010000-0.5\",\"type\":\"saida\",\"amount\":150,\"category\":\"Transporte\",\"description\":\"Entrega de produtos\",\"date\":\"2025-11-02\",\"timestamp\":1698873600000},{\"id\":\"1700000011000-0.5\",\"type\":\"entrada\",\"amount\":950,\"category\":\"Serviço\",\"description\":\"Serviço prestado a cliente B\",\"date\":\"2025-11-05\",\"timestamp\":1699132800000},{\"id\":\"1700000012000-0.5\",\"type\":\"saida\",\"amount\":800,\"category\":\"Compra\",\"description\":\"Reposição de estoque\",\"date\":\"2025-11-07\",\"timestamp\":1699305600000},{\"id\":\"1700000013000-0.5\",\"type\":\"entrada\",\"amount\":1100,\"category\":\"Venda\",\"description\":\"Vendas do fim de semana\",\"date\":\"2025-11-10\",\"timestamp\":1699564800000},{\"id\":\"1700000014000-0.5\",\"type\":\"saida\",\"amount\":1200,\"category\":\"Aluguel\",\"description\":\"Aluguel do estabelecimento\",\"date\":\"2025-11-10\",\"timestamp\":1699568400000},{\"id\":\"1700000015000-0.5\",\"type\":\"entrada\",\"amount\":600,\"category\":\"Outro\",\"description\":\"Venda de item especial\",\"date\":\"2025-11-12\",\"timestamp\":1699737600000},{\"id\":\"1700000016000-0.5\",\"type\":\"saida\",\"amount\":1500,\"category\":\"Salário\",\"description\":\"Pagamento funcionário\",\"date\":\"2025-11-13\",\"timestamp\":1699824000000}]",
+
+  "como_usar": {
+    "passo1": "Abra a aplicação",
+    "passo2": "Pressione F12 para abrir DevTools",
+    "passo3": "Vá para a aba 'Console'",
+    "passo4": "Cole o comando abaixo (escolha um dos exemplos):",
+    "comandos": {
+      "exemplo_simples": "localStorage.setItem('caixa_transactions', JSON.stringify([{\"id\":\"1000-0.5\",\"type\":\"entrada\",\"amount\":1500,\"category\":\"Venda\",\"description\":\"Venda de produtos eletrônicos\",\"date\":\"2025-11-15\",\"timestamp\":1731600000000},{\"id\":\"1001-0.5\",\"type\":\"saida\",\"amount\":600,\"category\":\"Compra\",\"description\":\"Compra de estoque mensal\",\"date\":\"2025-11-15\",\"timestamp\":1731603600000}])); location.reload();",
+      "exemplo_completo": "localStorage.setItem('caixa_transactions', '[{\"id\":\"1700000001000-0.5\",\"type\":\"entrada\",\"amount\":1500,\"category\":\"Venda\",\"description\":\"Venda de produtos XYZ\",\"date\":\"2025-10-15\",\"timestamp\":1697304000000},{\"id\":\"1700000002000-0.5\",\"type\":\"saida\",\"amount\":600,\"category\":\"Compra\",\"description\":\"Compra de estoque mensal\",\"date\":\"2025-10-15\",\"timestamp\":1697307600000},{\"id\":\"1700000003000-0.5\",\"type\":\"entrada\",\"amount\":800,\"category\":\"Serviço\",\"description\":\"Consultoria de negócios\",\"date\":\"2025-10-16\",\"timestamp\":1697390400000},{\"id\":\"1700000004000-0.5\",\"type\":\"saida\",\"amount\":1200,\"category\":\"Aluguel\",\"description\":\"Aluguel do estabelecimento\",\"date\":\"2025-10-17\",\"timestamp\":1697476800000},{\"id\":\"1700000005000-0.5\",\"type\":\"entrada\",\"amount\":450,\"category\":\"Venda\",\"description\":\"Venda de acessórios\",\"date\":\"2025-10-18\",\"timestamp\":1697563200000},{\"id\":\"1700000006000-0.5\",\"type\":\"saida\",\"amount\":1500,\"category\":\"Salário\",\"description\":\"Pagamento funcionário\",\"date\":\"2025-10-19\",\"timestamp\":1697649600000}]'); location.reload();",
+      "limpar_dados": "localStorage.removeItem('caixa_transactions'); location.reload();"
+    },
+    "passo5": "Recarregue a página (F5)",
+    "passo6": "Os dados de exemplo aparecerão no Dashboard"
+  }
+}

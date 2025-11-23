@@ -1,0 +1,185 @@
+.container {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container h2 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.filterButtons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filterBtn {
+  padding: 8px 16px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.filterBtn:hover {
+  border-color: #4CAF50;
+  background: #f5f5f5;
+  color: var(--text-primary);
+}
+
+.filterBtn.active {
+  border-color: #4CAF50;
+  background: #4CAF50;
+  color: white;
+}
+
+.filterBtn.entrada {
+  color: #27ae60;
+}
+
+.filterBtn.saida {
+  color: #e74c3c;
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 40px 20px;
+  font-size: 1.1rem;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.table thead {
+  background: #f5f5f5;
+  border-bottom: 2px solid #ddd;
+}
+
+.table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+}
+
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.table tbody tr:hover {
+  background: #f9f9f9;
+}
+
+.row.entradaRow {
+  border-left: 4px solid #27ae60;
+}
+
+.row.saidaRow {
+  border-left: 4px solid #e74c3c;
+}
+
+.positivo {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.negativo {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: transparent;
+}
+
+.editBtn {
+  color: #3498db;
+}
+
+.editBtn:hover {
+  background: #ecf0f1;
+  transform: scale(1.1);
+}
+
+.deleteBtn {
+  color: #e74c3c;
+}
+
+.deleteBtn:hover {
+  background: #ecf0f1;
+  transform: scale(1.1);
+}
+
+.saveBtn {
+  color: #27ae60;
+}
+
+.saveBtn:hover {
+  background: #ecf0f1;
+}
+
+.cancelBtn {
+  color: #e74c3c;
+}
+
+.cancelBtn:hover {
+  background: #ecf0f1;
+}
+
+.editInput {
+  padding: 6px;
+  border: 1px solid #3498db;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.editInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.85rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px;
+  }
+
+  .filterButtons {
+    flex-wrap: wrap;
+  }
+}
