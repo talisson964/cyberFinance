@@ -7,6 +7,7 @@ import { AdvancedReports } from './AdvancedReports';
 import { DebtConfiguration } from './DebtConfiguration';
 import { RateSimulator, PercentageCalculator, InvestmentForecast } from './Tools';
 import { OverdueWarningSystem } from './OverdueWarningSystem';
+import { ThemeToggle } from './ThemeToggle';
 import { BarChart2, Menu, X, CreditCard, ChevronDown, FileText, Wrench, LogOut } from 'lucide-react';
 
 export const AppContent: React.FC = () => {
@@ -266,6 +267,9 @@ export const AppContent: React.FC = () => {
             <Menu size={24} />
           </button>
           <h2>CyberFinance</h2>
+          <div style={{ marginLeft: 'auto' }}>
+            <ThemeToggle />
+          </div>
         </header>
 
         <main className="content">

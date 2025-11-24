@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useCaixa } from '../context/CaixaContext';
+import { useCaixa } from '../context/CaixaContextSupabase';
 import { X } from 'lucide-react';
 import { showNotification } from './CustomNotification';
 import { capitalizeText, capitalizeMultiline } from '../utils/textFormat';
@@ -15,7 +15,6 @@ interface EditMovementModalProps {
 
 const EXPENSE_CATEGORIES: Record<MovementType, string[]> = {
   pix: ['Alimentação', 'Combustível', 'Transporte', 'Medicamentos', 'Serviços', 'Outros'],
-  credito_avista: ['Compras', 'Serviços', 'Subscriptions', 'Outros'],
   cartao_credito: ['Compras', 'Serviços', 'Subscriptions', 'Outros'],
   parcelado: ['Compras', 'Serviços', 'Eletrônicos', 'Outros'],
   dinheiro: ['Alimentação', 'Combustível', 'Pequenas Despesas', 'Outros'],
@@ -35,8 +34,7 @@ export const EditMovementModal: React.FC<EditMovementModalProps> = ({
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
-  const [classification, setClassification] = useState<'fixo' | 'temporario' | 'nenhum'>('nenhum');
-  const [priority, setPriority] = useState<'alta' | 'média' | 'baixa'>('média');
+  const [classification, setClassification] = useState<'fixo' | 'ocasional' | 'nenhum'>('nenhum');
   const [notes, setNotes] = useState('');
   const [movementDate, setMovementDate] = useState('');
 
@@ -47,7 +45,6 @@ export const EditMovementModal: React.FC<EditMovementModalProps> = ({
       setCategory(movement.category);
       setDescription(movement.description);
       setClassification(movement.classification);
-      setPriority(movement.priority);
       setNotes(movement.notes || '');
       setMovementDate(movement.date);
     }
@@ -70,7 +67,7 @@ export const EditMovementModal: React.FC<EditMovementModalProps> = ({
     }
 
     try {
-      editMovement(
+      await editMovement(
         movement.id,
         movementType,
         numAmount,
@@ -78,7 +75,6 @@ export const EditMovementModal: React.FC<EditMovementModalProps> = ({
         description.trim(),
         classification,
         movementDate,
-        priority,
         notes || undefined
       );
 
@@ -86,7 +82,6 @@ export const EditMovementModal: React.FC<EditMovementModalProps> = ({
       setCategory('');
       setDescription('');
       setClassification('nenhum');
-      setPriority('média');
       setNotes('');
       setMovementDate(new Date().toISOString().split('T')[0]);
 
@@ -127,19 +122,17 @@ export const EditMovementModal: React.FC<EditMovementModalProps> = ({
               onChange={(e) => {
                 setMovementType(e.target.value as MovementType);
                 setCategory('');
-              }}
-            >
-              <option value="pix">PIX</option>
-              <option value="credito_avista">Crédito à Vista</option>
-              <option value="parcelado">Crédito Parcelado</option>
-              <option value="dinheiro">Dinheiro</option>
-              <option value="transferencia">Transferência</option>
-              <option value="debito">Débito</option>
-              <option value="boleto">Boleto</option>
-            </select>
-          </div>
-
-          {/* Valor */}
+            }}
+          >
+            <option value="pix">PIX</option>
+            <option value="cartao_credito">Cartão de Crédito</option>
+            <option value="parcelado">Crédito Parcelado</option>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="transferencia">Transferência</option>
+            <option value="debito">Débito</option>
+            <option value="boleto">Boleto</option>
+          </select>
+        </div>          {/* Valor */}
           <div className={styles.formGroup}>
             <label htmlFor="amount">Valor *</label>
             <input
@@ -205,20 +198,6 @@ export const EditMovementModal: React.FC<EditMovementModalProps> = ({
               <option value="nenhum">Nenhum</option>
               <option value="fixo">Gasto Fixo</option>
               <option value="temporario">Gasto Temporário</option>
-            </select>
-          </div>
-
-          {/* Prioridade */}
-          <div className={styles.formGroup}>
-            <label htmlFor="priority">Prioridade</label>
-            <select
-              id="priority"
-              value={priority}
-              onChange={(e) => setPriority(e.target.value as any)}
-            >
-              <option value="baixa">Baixa</option>
-              <option value="média">Média</option>
-              <option value="alta">Alta</option>
             </select>
           </div>
 

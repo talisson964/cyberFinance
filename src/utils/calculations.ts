@@ -39,8 +39,8 @@ export const calculateStats = (transactions: Transaction[], movements: Movement[
       return m.isPaid ? sum + m.amount : sum;
     }, 0);
 
-  const movementSaidaTemporario = movements
-    .filter(m => m.type === 'saida' && m.classification === 'temporario')
+  const movementSaidaOcasional = movements
+    .filter(m => m.type === 'saida' && m.classification === 'ocasional')
     .reduce((sum, m) => {
       if (m.installments && m.installments.length > 0) {
         const paidAmount = m.installments
@@ -64,7 +64,7 @@ export const calculateStats = (transactions: Transaction[], movements: Movement[
     }, 0);
 
   const totalEntradaFinal = totalEntrada + movementEntrada;
-  const totalSaidaFinal = totalSaida + movementSaidaFixo + movementSaidaTemporario + movementSaidaNenhum;
+  const totalSaidaFinal = totalSaida + movementSaidaFixo + movementSaidaOcasional + movementSaidaNenhum;
 
   const liquido = totalEntradaFinal - totalSaidaFinal;
 
@@ -118,7 +118,7 @@ export const calculateStats = (transactions: Transaction[], movements: Movement[
     liquido,
     lucro: liquido,
     fixoSaida: movementSaidaFixo,
-    temporarioSaida: movementSaidaTemporario,
+    ocasionalSaida: movementSaidaOcasional,
     fixoEntrada: movements
       .filter(m => m.type === 'entrada' && m.classification === 'fixo')
       .reduce((sum, m) => {
@@ -130,8 +130,8 @@ export const calculateStats = (transactions: Transaction[], movements: Movement[
         }
         return m.isPaid ? sum + m.amount : sum;
       }, 0),
-    temporarioEntrada: movements
-      .filter(m => m.type === 'entrada' && m.classification === 'temporario')
+    ocasionalEntrada: movements
+      .filter(m => m.type === 'entrada' && m.classification === 'ocasional')
       .reduce((sum, m) => {
         if (m.installments && m.installments.length > 0) {
           const paidAmount = m.installments
@@ -152,8 +152,8 @@ export const getMonthlySummary = (transactions: Transaction[], movements: Moveme
   const months = new Map<string, { 
     entrada: number; 
     saida: number; 
-    fixoSaida: number; 
-    temporarioSaida: number;
+    fixoSaida: number;
+    ocasionalSaida: number;
     atrasado: number;
     pendente: number;
     aReceber: number;
@@ -163,7 +163,7 @@ export const getMonthlySummary = (transactions: Transaction[], movements: Moveme
   transactions.forEach(t => {
     const monthKey = t.date.substring(0, 7);
     if (!months.has(monthKey)) {
-      months.set(monthKey, { entrada: 0, saida: 0, fixoSaida: 0, temporarioSaida: 0, atrasado: 0, pendente: 0, aReceber: 0, aPagar: 0 });
+      months.set(monthKey, { entrada: 0, saida: 0, fixoSaida: 0, ocasionalSaida: 0, atrasado: 0, pendente: 0, aReceber: 0, aPagar: 0 });
     }
     const data = months.get(monthKey)!;
     if (t.type === 'entrada') {
@@ -176,7 +176,7 @@ export const getMonthlySummary = (transactions: Transaction[], movements: Moveme
   movements.forEach(m => {
     const monthKey = m.date.substring(0, 7);
     if (!months.has(monthKey)) {
-      months.set(monthKey, { entrada: 0, saida: 0, fixoSaida: 0, temporarioSaida: 0, atrasado: 0, pendente: 0, aReceber: 0, aPagar: 0 });
+      months.set(monthKey, { entrada: 0, saida: 0, fixoSaida: 0, ocasionalSaida: 0, atrasado: 0, pendente: 0, aReceber: 0, aPagar: 0 });
     }
     const data = months.get(monthKey)!;
 
@@ -204,8 +204,8 @@ export const getMonthlySummary = (transactions: Transaction[], movements: Moveme
       data.saida += paidAmount;
       if (m.classification === 'fixo') {
         data.fixoSaida += paidAmount;
-      } else if (m.classification === 'temporario') {
-        data.temporarioSaida += paidAmount;
+      } else if (m.classification === 'ocasional') {
+        data.ocasionalSaida += paidAmount;
       }
     }
   });
@@ -351,10 +351,6 @@ export const calculateCashFlowForecast = (movements: Movement[], days = 30) => {
   return forecast;
 };
 
-export const getMovementsByPriority = (movements: Movement[], priority: string) => {
-  return movements.filter(m => m.priority === priority);
-};
-
 export const getMovementSummaryByCategory = (movements: Movement[]) => {
   const summary: Record<string, { income: number; expense: number; count: number }> = {};
 
@@ -409,11 +405,6 @@ export const getOverdueBreakdown = (movements: Movement[]) => {
   return {
     totalCount: overdue.length,
     totalAmount: calculateTotalOverdue(movements),
-    byPriority: {
-      alta: overdue.filter(m => m.priority === 'alta').length,
-      média: overdue.filter(m => m.priority === 'média').length,
-      baixa: overdue.filter(m => m.priority === 'baixa').length,
-    },
     byCategory: overdue.reduce((acc, m) => {
       acc[m.category] = (acc[m.category] || 0) + 1;
       return acc;

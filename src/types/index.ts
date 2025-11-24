@@ -1,8 +1,7 @@
 export type TransactionType = 'entrada' | 'saida';
-export type MovementType = 'pix' | 'credito_avista' | 'cartao_credito' | 'parcelado' | 'dinheiro' | 'transferencia' | 'boleto' | 'debito';
-export type ExpenseClassification = 'fixo' | 'temporario' | 'nenhum';
+export type MovementType = 'pix' | 'cartao_credito' | 'parcelado' | 'dinheiro' | 'transferencia' | 'boleto' | 'debito';
+export type ExpenseClassification = 'fixo' | 'ocasional' | 'nenhum';
 export type PaymentStatus = 'pendente' | 'parcial' | 'pago' | 'atrasado';
-export type Priority = 'alta' | 'média' | 'baixa';
 
 // Subcategorias de Entrada
 export type EntradaSubcategory = 
@@ -28,6 +27,7 @@ export type SaidaSubcategory =
   | 'manutencao'
   | 'escritorio'
   | 'materiais'
+  | 'compra_estoque'
   | 'consultorias'
   | 'outra_saida';
 
@@ -61,7 +61,6 @@ export interface Transaction {
   date: string; // Data customizável
   timestamp: number;
   recurrence?: 'unica' | 'diaria' | 'semanal' | 'mensal' | 'anual';
-  priority: Priority;
 }
 
 export interface Movement {
@@ -76,7 +75,6 @@ export interface Movement {
   date: string; // Data customizável
   timestamp: number;
   classification: ExpenseClassification;
-  priority: Priority;
   status: PaymentStatus;
   
   // Campos de parcelas expandidos
@@ -113,9 +111,9 @@ export interface DashboardStats {
   liquido: number;
   lucro: number;
   fixoSaida: number;
-  temporarioSaida: number;
+  ocasionalSaida: number;
   fixoEntrada: number;
-  temporarioEntrada: number;
+  ocasionalEntrada: number;
   
   // Novos campos
   atrasado: number;
@@ -130,7 +128,7 @@ export interface MonthlySummary {
   saida: number;
   liquido: number;
   fixoSaida: number;
-  temporarioSaida: number;
+  ocasionalSaida: number;
   atrasado: number;
   pendente: number;
   aReceber: number;

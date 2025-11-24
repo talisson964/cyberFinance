@@ -8,7 +8,6 @@ import type {
   ExpenseClassification,
   Installment,
   PaymentStatus,
-  Priority,
   CashFlowReport,
   OverdueAnalysis,
   FutureFlowForecast,
@@ -28,8 +27,7 @@ interface CaixaContextType {
     category: string, 
     description: string,
     date?: string,
-    recurrence?: 'unica' | 'diaria' | 'semanal' | 'mensal' | 'anual',
-    priority?: Priority
+    recurrence?: 'unica' | 'diaria' | 'semanal' | 'mensal' | 'anual'
   ) => void;
   deleteTransaction: (id: string) => void;
   editTransaction: (
@@ -38,8 +36,7 @@ interface CaixaContextType {
     category: string, 
     description: string,
     date?: string,
-    recurrence?: 'unica' | 'diaria' | 'semanal' | 'mensal' | 'anual',
-    priority?: Priority
+    recurrence?: 'unica' | 'diaria' | 'semanal' | 'mensal' | 'anual'
   ) => void;
 
   // MOVIMENTAÇÕES
@@ -51,7 +48,6 @@ interface CaixaContextType {
     description: string,
     classification: ExpenseClassification,
     date?: string,
-    priority?: Priority,
     totalInstallments?: number,
     firstInstallmentDate?: string,
     notes?: string,
@@ -66,7 +62,6 @@ interface CaixaContextType {
     description: string;
     classification: ExpenseClassification;
     date?: string;
-    priority?: Priority;
     totalInstallments?: number;
     firstInstallmentDate?: string;
     notes?: string;
@@ -83,7 +78,6 @@ interface CaixaContextType {
     description: string,
     classification: ExpenseClassification,
     date?: string,
-    priority?: Priority,
     notes?: string
   ) => void;
 
@@ -101,7 +95,6 @@ interface CaixaContextType {
   getPendingMovements: () => Movement[];
   getOverdueMovements: () => Movement[];
   getMovementsByStatus: (status: PaymentStatus) => Movement[];
-  getMovementsByPriority: (priority: Priority) => Movement[];
   getMovementsByCategory: (category: string) => Movement[];
   getMovementsByDateRange: (startDate: string, endDate: string) => Movement[];
   
@@ -199,8 +192,7 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     category: string,
     description: string,
     date?: string,
-    recurrence?: 'unica' | 'diaria' | 'semanal' | 'mensal' | 'anual',
-    priority: Priority = 'média'
+    recurrence?: 'unica' | 'diaria' | 'semanal' | 'mensal' | 'anual'
   ) => {
     const newTransaction: Transaction = {
       id: `${Date.now()}-${Math.random()}`,
@@ -211,7 +203,6 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       date: date || new Date().toISOString().split('T')[0],
       timestamp: Date.now(),
       recurrence: recurrence || 'unica',
-      priority,
     };
     setTransactions([newTransaction, ...transactions]);
   };
@@ -226,8 +217,7 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     category: string,
     description: string,
     date?: string,
-    recurrence?: 'unica' | 'diaria' | 'semanal' | 'mensal' | 'anual',
-    priority?: Priority
+    recurrence?: 'unica' | 'diaria' | 'semanal' | 'mensal' | 'anual'
   ) => {
     setTransactions(transactions.map(t =>
       t.id === id 
@@ -237,8 +227,7 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             category, 
             description,
             date: date || t.date,
-            recurrence: recurrence || t.recurrence,
-            priority: priority || t.priority
+            recurrence: recurrence || t.recurrence
           } 
         : t
     ));
@@ -321,7 +310,6 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       mov1.category === mov2.category &&
       mov1.movementType === mov2.movementType &&
       mov1.classification === mov2.classification &&
-      mov1.priority === mov2.priority &&
       mov1.totalInstallments === mov2.totalInstallments &&
       mov1.paidInstallments === mov2.paidInstallments &&
       bank1 === bank2
@@ -387,7 +375,6 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     description: string,
     classification: ExpenseClassification,
     date?: string,
-    priority: Priority = 'média',
     totalInstallments?: number,
     firstInstallmentDate?: string,
     notes?: string,
@@ -409,7 +396,6 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       description,
       date: movementDate,
       classification,
-      priority,
       totalInstallments,
       paidInstallments: 0,
       notes,
@@ -436,6 +422,10 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
 
     // Criar nova movimentação normalmente
+    // Marca como pago automaticamente se for PIX ou Débito
+    const shouldMarkAsPaid = movementType === 'pix' || movementType === 'debito';
+    const paidDate = shouldMarkAsPaid ? movementDate : undefined;
+
     const newMovement: Movement = {
       id: movementId,
       transactionId: `${Date.now()}-${Math.random()}`,
@@ -447,16 +437,16 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       date: movementDate,
       timestamp: Date.now(),
       classification,
-      priority,
       installments,
       totalInstallments,
       paidInstallments: 0,
-      isPaid: false,
+      isPaid: shouldMarkAsPaid,
       isOverdue: false,
       notes,
-      status: 'pendente',
+      status: shouldMarkAsPaid ? 'pago' : 'pendente',
       fixedExpenseDuration,
       purchaseItems,
+      ...(shouldMarkAsPaid && { paidDate }),
     };
 
     setMovements([newMovement, ...movements]);
@@ -472,7 +462,6 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     description: string;
     classification: ExpenseClassification;
     date?: string;
-    priority?: Priority;
     totalInstallments?: number;
     firstInstallmentDate?: string;
     notes?: string;
@@ -501,7 +490,7 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       const totalPaid = installments ? installments.filter(inst => inst.isPaid).length : 0;
       const allInstallmentsPaid = installments ? totalPaid === installments.length : false;
       
-      // Marcar como pago se shouldMarkAsPaid for true (PIX, Débito, Crédito à Vista)
+      // Marcar como pago se shouldMarkAsPaid for true (PIX, Débito)
       // ou se todas as parcelas forem pagas
       const shouldBePaid = item.shouldMarkAsPaid || allInstallmentsPaid;
       const paidDate = shouldBePaid ? item.date || new Date().toISOString().split('T')[0] : undefined;
@@ -517,7 +506,6 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         date: movementDate,
         timestamp: Date.now(),
         classification: item.classification,
-        priority: item.priority || 'média',
         installments,
         totalInstallments: item.totalInstallments,
         paidInstallments: totalPaid,
@@ -545,7 +533,6 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     description: string,
     classification: ExpenseClassification,
     date?: string,
-    priority?: Priority,
     notes?: string
   ) => {
     setMovements(movements.map(m =>
@@ -558,7 +545,6 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             description,
             classification,
             date: date || m.date,
-            priority: priority || m.priority,
             notes: notes !== undefined ? notes : m.notes,
           }
         : m
@@ -712,10 +698,6 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const getMovementsByStatus = (status: PaymentStatus) => {
     return movements.filter(m => calculatePaymentStatus(m) === status);
-  };
-
-  const getMovementsByPriority = (priority: Priority) => {
-    return movements.filter(m => m.priority === priority);
   };
 
   const getMovementsByCategory = (category: string) => {
@@ -1099,7 +1081,6 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     getPendingMovements,
     getOverdueMovements,
     getMovementsByStatus,
-    getMovementsByPriority,
     getMovementsByCategory,
     getMovementsByDateRange,
     getCashFlowReport,

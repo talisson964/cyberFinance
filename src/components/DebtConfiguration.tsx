@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useCaixa } from '../context/CaixaContext';
+import { useCaixa } from '../context/CaixaContextSupabase';
 import { formatCurrency, formatDate } from '../utils/calculations';
 import styles from './DebtConfiguration.module.css';
 import { Trash2, Edit2 } from 'lucide-react';

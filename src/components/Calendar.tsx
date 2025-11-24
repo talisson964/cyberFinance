@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import ReactCalendar from 'react-calendar';
-import { useCaixa } from '../context/CaixaContext';
+import { useCaixa } from '../context/CaixaContextSupabase';
 import { formatCurrency } from '../utils/calculations';
 import 'react-calendar/dist/Calendar.css';
 import styles from './Calendar.module.css';

@@ -84,6 +84,65 @@ body {
   min-height: 100vh;
   background: var(--bg-secondary);
   position: relative;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Tema Claro */
+body.light-theme {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  color-scheme: light;
+}
+
+/* Tema Escuro Melhorado */
+body.dark-theme {
+  /* Backgrounds mais suaves e modernos */
+  --bg-primary: #0f1419;
+  --bg-secondary: #1a1f2e;
+  --bg-tertiary: #252d3d;
+  --bg-dark: #090c10;
+  --bg-sidebar: linear-gradient(180deg, #1a1f2e 0%, #0f1419 100%);
+  
+  /* Textos com melhor contraste */
+  --text-primary: #e4e6eb;
+  --text-secondary: #b8bcc8;
+  --text-tertiary: #8b92a8;
+  --text-inverse: #0f1419;
+  
+  /* Borders mais visíveis no escuro */
+  --border-color: #2d3548;
+  --border-light: #252d3d;
+  --border-dark: #3d4558;
+  
+  /* Cores de destaque ajustadas para dark mode */
+  --primary-color: #3b82f6;
+  --primary-light: #60a5fa;
+  --accent-color: #fbbf24;
+  --accent-light: #fcd34d;
+  
+  /* Sombras adaptadas para dark mode */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  
+  color-scheme: dark;
+}
+
+/* Background animado ajustado para dark mode */
+body.dark-theme::before {
+  background: 
+    linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(251, 191, 36, 0.03) 0%, transparent 50%);
 }
 
 /* Animated background */

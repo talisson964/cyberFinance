@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useCaixa } from '../context/CaixaContext';
+import { useCaixa } from '../context/CaixaContextSupabase';
 
 /**
  * Hook de sincronização em tempo real para o Dashboard

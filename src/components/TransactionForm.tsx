@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useCaixa } from '../context/CaixaContext';
+import { useCaixa } from '../context/CaixaContextSupabase';
 import { showNotification } from './CustomNotification';
 import { capitalizeText } from '../utils/textFormat';
 import styles from './TransactionForm.module.css';

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import * as XLSX from 'xlsx';
-import { useCaixa } from '../context/CaixaContext';
+import { useCaixa } from '../context/CaixaContextSupabase';
 import type { MovementType } from '../types';
 import { capitalizeText } from '../utils/textFormat';
 import styles from './SpreadsheetUpload.module.css';
@@ -30,7 +30,7 @@ interface MovementToImport {
   amount: number;
   category: string;
   description: string;
-  classification: 'fixo' | 'temporario' | 'nenhum';
+  classification: 'fixo' | 'ocasional' | 'nenhum';
   date?: string;
   priority?: 'alta' | 'média' | 'baixa';
   totalInstallments?: number;
@@ -130,8 +130,8 @@ export const SpreadsheetUpload: React.FC = () => {
   };
 
   const shouldMarkAsPaid = (movementType: MovementType): boolean => {
-    // PIX, Débito e Crédito à Vista devem ser marcados como pagos automaticamente
-    return movementType === 'pix' || movementType === 'debito' || movementType === 'credito_avista';
+    // PIX e Débito devem ser marcados como pagos automaticamente
+    return movementType === 'pix' || movementType === 'debito';
   };
 
   const mapPaymentMethodToMovementType = (method: string, totalInstallments: number = 1): MovementType => {
@@ -141,7 +141,7 @@ export const SpreadsheetUpload: React.FC = () => {
     if (normalized.includes('débito') || normalized.includes('debito') || normalized.includes('cartao debito')) return 'debito';
     if (normalized.includes('crédito') || normalized.includes('credito')) {
       // Se tem mais de uma parcela, é crédito parcelado
-      return totalInstallments > 1 ? 'parcelado' : 'credito_avista';
+      return totalInstallments > 1 ? 'parcelado' : 'cartao_credito';
     }
     if (normalized.includes('parcelado')) return 'parcelado';
     if (normalized.includes('dinheiro')) return 'dinheiro';
@@ -682,7 +682,7 @@ export const SpreadsheetUpload: React.FC = () => {
           description: group.items.length > 1 
             ? `Compra agrupada (${group.items.length} itens)` 
             : firstItem.description,
-          classification: firstItem.totalInstallments > 1 ? 'temporario' : 'nenhum' as 'fixo' | 'temporario' | 'nenhum',
+          classification: firstItem.totalInstallments > 1 ? 'ocasional' : 'nenhum' as 'fixo' | 'ocasional' | 'nenhum',
           date: firstItem.date,
           priority: 'média' as const,
           totalInstallments: firstItem.totalInstallments > 1 ? firstItem.totalInstallments : undefined,

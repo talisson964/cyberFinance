@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useCaixa } from '../context/CaixaContext';
-import type { TransactionType, MovementType, ExpenseClassification, Priority, EntradaSubcategory, SaidaSubcategory, PurchaseItem } from '../types';
+import { useCaixa } from '../context/CaixaContextSupabase';
+import type { TransactionType, MovementType, ExpenseClassification, EntradaSubcategory, SaidaSubcategory, PurchaseItem } from '../types';
 import { showNotification } from './CustomNotification';
 import { PurchaseItemsManager } from './PurchaseItemsManager';
 import { capitalizeText, capitalizeMultiline } from '../utils/textFormat';
@@ -29,13 +29,13 @@ const SAIDA_SUBCATEGORIES: { value: SaidaSubcategory; label: string }[] = [
   { value: 'manutencao', label: '🔨 Manutenção' },
   { value: 'escritorio', label: '📑 Material de Escritório' },
   { value: 'materiais', label: '📦 Materiais' },
+  { value: 'compra_estoque', label: '📦 Compra de Estoque' },
   { value: 'consultorias', label: '📞 Consultorias' },
   { value: 'outra_saida', label: '❓ Outra Saída' },
 ];
 
 const MOVEMENT_TYPES: { value: MovementType; label: string }[] = [
   { value: 'pix', label: '📱 Pix' },
-  { value: 'credito_avista', label: '💳 Crédito à Vista' },
   { value: 'cartao_credito', label: '💳 Cartão de Crédito' },
   { value: 'parcelado', label: '📅 Parcelado' },
   { value: 'dinheiro', label: '💵 Dinheiro' },
@@ -56,6 +56,7 @@ const BANCOS_CARTAO = [
   'BTG Pactual',
   'Banco Pan',
   'Porto Seguro',
+  'Will Bank',
   'Outro',
 ];
 
@@ -63,8 +64,7 @@ export const MovementForm: React.FC = () => {
   const { addMovement } = useCaixa();
   const [type, setType] = useState<TransactionType>('saida');
   const [movementType, setMovementType] = useState<MovementType>('pix');
-  const [classification, setClassification] = useState<ExpenseClassification>('temporario');
-  const [priority, setPriority] = useState<Priority>('média');
+  const [classification, setClassification] = useState<ExpenseClassification>('ocasional');
   const [amount, setAmount] = useState('');
   const [subcategory, setSubcategory] = useState<EntradaSubcategory | SaidaSubcategory>('outra_saida');
   const [description, setDescription] = useState('');
@@ -101,13 +101,13 @@ export const MovementForm: React.FC = () => {
       return;
     }
 
-    if (isParcelado && (!firstInstallmentDate || !totalInstallments || parseInt(totalInstallments) <= 0)) {
-      await showNotification('error', 'Para parcelamento, preencha a data da primeira parcela e total de parcelas');
+    if (isParcelado && (!totalInstallments || parseInt(totalInstallments) <= 0)) {
+      await showNotification('error', 'Para parcelamento, informe o total de parcelas');
       return;
     }
 
-    if (type === 'saida' && movementType === 'cartao_credito' && !cardBank) {
-      await showNotification('error', 'Por favor, selecione o banco do cartão de crédito');
+    if (type === 'saida' && (movementType === 'cartao_credito' || (movementType === 'parcelado' && isParcelado)) && !cardBank) {
+      await showNotification('error', 'Por favor, selecione o banco do cartão');
       return;
     }
 
@@ -115,13 +115,21 @@ export const MovementForm: React.FC = () => {
     const subcategoryObj = subcategories.find(s => s.value === subcategory);
     const categoryLabel = subcategoryObj?.label || subcategory;
 
+    // Calcular data de vencimento se não foi informada (padrão: 30 dias após a movimentação)
+    let calculatedFirstInstallmentDate = firstInstallmentDate;
+    if (isParcelado && !firstInstallmentDate) {
+      const firstDueDate = new Date(movementDate);
+      firstDueDate.setDate(firstDueDate.getDate() + 30);
+      calculatedFirstInstallmentDate = firstDueDate.toISOString().split('T')[0];
+    }
+
     // Adicionar banco do cartão nas notas se for cartão de crédito
     let finalNotes = notes || '';
-    if (type === 'saida' && movementType === 'cartao_credito' && cardBank) {
+    if (type === 'saida' && (movementType === 'cartao_credito' || movementType === 'parcelado') && cardBank) {
       finalNotes = finalNotes ? `${finalNotes}\n\nBanco: ${cardBank}` : `Banco: ${cardBank}`;
     }
 
-    const result = addMovement(
+    const result = await addMovement(
       type,
       movementType,
       numAmount,
@@ -129,9 +137,8 @@ export const MovementForm: React.FC = () => {
       description.trim(),
       classification,
       movementDate,
-      priority,
       isParcelado ? parseInt(totalInstallments) : undefined,
-      isParcelado ? firstInstallmentDate : undefined,
+      isParcelado ? calculatedFirstInstallmentDate : undefined,
       finalNotes || undefined,
       fixedExpenseDuration ? parseInt(fixedExpenseDuration) : undefined,
       type === 'saida' && subcategory === 'fornecedores' && purchaseItems.length > 0 ? purchaseItems : undefined
@@ -185,7 +192,7 @@ export const MovementForm: React.FC = () => {
             onClick={() => {
               setType('saida');
               setSubcategory('fornecedores');
-              setClassification('temporario');
+              setClassification('ocasional');
             }}
           >
             💸 Saída
@@ -217,7 +224,7 @@ export const MovementForm: React.FC = () => {
               onChange={(e) => setClassification(e.target.value as ExpenseClassification)}
             >
               <option value="fixo">🔄 Gasto Fixo (recorrente)</option>
-              <option value="temporario">⏱️ Gasto Temporário</option>
+              <option value="ocasional">⏱️ Gasto Ocasional</option>
               <option value="nenhum">Nenhum</option>
             </select>
           </div>
@@ -235,22 +242,6 @@ export const MovementForm: React.FC = () => {
               onChange={(e) => setFixedExpenseDuration(e.target.value)}
               placeholder="Ex: 12, 24..."
             />
-          </div>
-        )}
-
-        {/* Prioridade (apenas para saída) */}
-        {type === 'saida' && (
-          <div className={styles.formGroup}>
-            <label htmlFor="priority">Prioridade</label>
-            <select
-              id="priority"
-              value={priority}
-              onChange={(e) => setPriority(e.target.value as Priority)}
-            >
-              <option value="alta">🔴 Alta</option>
-              <option value="média">🟡 Média</option>
-              <option value="baixa">🟢 Baixa</option>
-            </select>
           </div>
         )}
 
@@ -345,8 +336,8 @@ export const MovementForm: React.FC = () => {
           />
         </div>
 
-        {/* Banco do Cartão (apenas para saída com cartão de crédito) */}
-        {type === 'saida' && movementType === 'cartao_credito' && (
+        {/* Banco do Cartão (para cartão de crédito e parcelado) */}
+        {type === 'saida' && (movementType === 'cartao_credito' || (movementType === 'parcelado' && isParcelado)) && (
           <div className={styles.formGroup}>
             <label htmlFor="cardBank">Banco do Cartão *</label>
             <select
@@ -371,7 +362,55 @@ export const MovementForm: React.FC = () => {
           />
         )}
 
-        {/* Parcelamento */}
+        {/* Parcelamento para Cartão de Crédito */}
+        {movementType === 'cartao_credito' && (
+          <div className={styles.installmentSection}>
+            <div className={styles.checkboxGroup}>
+              <input
+                id="isParceladoCredito"
+                type="checkbox"
+                checked={isParcelado}
+                onChange={(e) => setIsParcelado(e.target.checked)}
+              />
+              <label htmlFor="isParceladoCredito">📅 Parcelar no cartão</label>
+            </div>
+
+            {isParcelado && (
+              <div className={styles.installmentFields}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="totalInstallments">Total de Parcelas *</label>
+                  <input
+                    id="totalInstallments"
+                    type="number"
+                    min="2"
+                    max="48"
+                    value={totalInstallments}
+                    onChange={(e) => setTotalInstallments(e.target.value)}
+                    placeholder="Ex: 12"
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="firstInstallmentDate">
+                    Data de Vencimento (opcional)
+                    <small style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '12px', marginTop: '4px' }}>
+                      Se não informada, será 30 dias após a data da movimentação
+                    </small>
+                  </label>
+                  <input
+                    id="firstInstallmentDate"
+                    type="date"
+                    value={firstInstallmentDate}
+                    onChange={(e) => setFirstInstallmentDate(e.target.value)}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Parcelamento para Tipo Parcelado */}
         {movementType === 'parcelado' && (
           <div className={styles.installmentSection}>
             <div className={styles.checkboxGroup}>
@@ -387,22 +426,28 @@ export const MovementForm: React.FC = () => {
             {isParcelado && (
               <div className={styles.installmentFields}>
                 <div className={styles.formGroup}>
-                  <label htmlFor="totalInstallments">Total de Parcelas</label>
+                  <label htmlFor="totalInstallmentsParcelado">Total de Parcelas *</label>
                   <input
-                    id="totalInstallments"
+                    id="totalInstallmentsParcelado"
                     type="number"
                     min="2"
                     max="48"
                     value={totalInstallments}
                     onChange={(e) => setTotalInstallments(e.target.value)}
                     placeholder="Ex: 12"
+                    required
                   />
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label htmlFor="firstInstallmentDate">Data da Primeira Parcela</label>
+                  <label htmlFor="firstInstallmentDateParcelado">
+                    Data de Vencimento (opcional)
+                    <small style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '12px', marginTop: '4px' }}>
+                      Se não informada, será 30 dias após a data da movimentação
+                    </small>
+                  </label>
                   <input
-                    id="firstInstallmentDate"
+                    id="firstInstallmentDateParcelado"
                     type="date"
                     value={firstInstallmentDate}
                     onChange={(e) => setFirstInstallmentDate(e.target.value)}

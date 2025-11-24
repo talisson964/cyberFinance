@@ -360,7 +360,7 @@
   display: none;
 }
 
-.temporarioBadge {
+.ocasionalBadge {
   background: rgba(243, 156, 18, 0.1);
   color: #f39c12;
   padding: 4px 10px;
@@ -394,7 +394,7 @@
   display: none;
 }
 
-.temporarioColor {
+.ocasionalColor {
   color: #e67e22;
 }
 
@@ -493,7 +493,7 @@
 
 .realtimeBadge,
 .paidMonthBadge,
-.temporarioBadge,
+.ocasionalBadge,
 .pendingBadge,
 .fixedIncomeBadge,
 .recordBadge {
@@ -520,7 +520,7 @@
   color: #10b981;
 }
 
-.temporarioBadge {
+.ocasionalBadge {
   background: rgba(243, 156, 18, 0.1);
   color: #f39c12;
 }

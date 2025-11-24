@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useCaixa } from '../context/CaixaContext';
+import { useCaixa } from '../context/CaixaContextSupabase';
 import { showNotification } from './CustomNotification';
 
 const LAST_WARNING_KEY = 'lastOverdueWarning';

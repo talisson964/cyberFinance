@@ -1,10 +1,11 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { useCaixa } from '../context/CaixaContext';
+import { useCaixa } from '../context/CaixaContextSupabase';
 import { useDashboardSync } from '../hooks/useDashboardSync';
 import { useSearchParams } from 'react-router-dom';
 import { calculateStats, getMonthlySummary, getBestAndWorstMonths, getMonthName, formatCurrency, getSalesCountByMonth, calculateRealTimeFixedExpenses, getMovementCounts, calculatePaidFixedExpensesThisMonth, getPendingCount, getQuantityByCategory, getGainsByCategory, calculateMonthlyFixedIncome, getFixedIncomeVsExpenseEvolution, calculateEndOfMonthForecast, getMonthlyPayables, getMonthlyReceivables } from '../utils/calculations';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { showNotification } from './CustomNotification';
+import { LoadingSpinner } from './LoadingSpinner';
 import styles from './Dashboard.module.css';
 
 const COLORS = {
@@ -20,17 +21,58 @@ const COLORS = {
 };
 
 export const Dashboard: React.FC = () => {
-  const { transactions, movements, clearAllData, exportAllData, importAllData, getDataSummary } = useCaixa();
+  const { transactions, movements, loading } = useCaixa();
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get('tab') || 'dados';
   const [activeTab, setActiveTab] = useState<'dados' | 'graficos'>(tabParam as 'dados' | 'graficos');
   const [evolutionPeriod, setEvolutionPeriod] = useState<'1m' | '6m' | '1y' | '5y'>('6m');
   const [showDataManager, setShowDataManager] = useState(false);
+  
+  // IMPORTANTE: Todos os hooks devem estar antes de qualquer return condicional
   useDashboardSync(); // Sincronização em tempo real do histórico
 
   useEffect(() => {
     setActiveTab(tabParam as 'dados' | 'graficos');
   }, [tabParam]);
+
+  // useMemo hooks
+  const stats = useMemo(() => calculateStats(transactions, movements), [transactions, movements]);
+  const monthlySummary = useMemo(() => getMonthlySummary(transactions, movements), [transactions, movements]);
+  const bestAndWorst = useMemo(() => getBestAndWorstMonths(monthlySummary), [monthlySummary]);
+  const realTimeFixedExpenses = useMemo(() => calculateRealTimeFixedExpenses(movements), [movements]);
+  const movementCounts = useMemo(() => getMovementCounts(movements), [movements]);
+  const paidFixedExpensesThisMonth = useMemo(() => calculatePaidFixedExpensesThisMonth(movements), [movements]);
+  const pendingCount = useMemo(() => getPendingCount(movements), [movements]);
+  const monthlyFixedIncome = useMemo(() => calculateMonthlyFixedIncome(movements), [movements]);
+  const endOfMonthForecast = useMemo(() => calculateEndOfMonthForecast(movements), [movements]);
+  const evolutionData = useMemo(() => getFixedIncomeVsExpenseEvolution(movements, evolutionPeriod), [movements, evolutionPeriod]);
+  const monthlyPayables = useMemo(() => getMonthlyPayables(movements), [movements]);
+  const monthlyReceivables = useMemo(() => getMonthlyReceivables(movements), [movements]);
+
+  const categoryData = useMemo(() => getQuantityByCategory(transactions, movements), [transactions, movements]);
+  const gainsByCategoryData = useMemo(() => getGainsByCategory(transactions, movements), [transactions, movements]);
+  const classificacaoData = useMemo(() => [
+    { name: 'Gasto Fixo', value: stats.fixoSaida },
+    { name: 'Gasto Ocasional', value: stats.ocasionalSaida },
+  ].filter(item => item.value > 0), [stats]);
+  const salesCountData = useMemo(() => getSalesCountByMonth(transactions, movements), [transactions, movements]);
+
+  const chartData = monthlySummary.map(m => ({
+    ...m,
+    month: getMonthName(m.month),
+    monthKey: m.month,
+  }));
+
+  const evolutionChartData = evolutionData.map(item => ({
+    month: getMonthName(item.month),
+    receitas: item.rendaFixa,
+    despesas: item.gastoFixo,
+  }));
+
+  // Agora sim, após TODOS os hooks, pode ter return condicional
+  if (loading && movements.length === 0 && transactions.length === 0) {
+    return <LoadingSpinner fullScreen size="large" message="Carregando dashboard..." />;
+  }
 
   const handleTabChange = (tab: 'dados' | 'graficos') => {
     setActiveTab(tab);
@@ -38,13 +80,20 @@ export const Dashboard: React.FC = () => {
   };
 
   const handleClearData = async () => {
+    // TODO: Implementar clearAllData no CaixaContextSupabase
+    await showNotification('warning', 'Funcionalidade em desenvolvimento');
+    /*
     if (window.confirm('⚠️ ATENÇÃO!\n\nVocê está prestes a deletar TODOS os dados do dashboard:\n- Todas as movimentações\n- Todas as transações\n- Todo o histórico\n\nEsta ação NÃO pode ser desfeita!\n\nDeseja continuar?')) {
       clearAllData();
       await showNotification('success', 'Todos os dados foram limpos com sucesso!');
     }
+    */
   };
 
   const handleExportData = () => {
+    // TODO: Implementar exportAllData no CaixaContextSupabase
+    showNotification('warning', 'Funcionalidade em desenvolvimento');
+    /*
     const data = exportAllData();
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -56,9 +105,13 @@ export const Dashboard: React.FC = () => {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
     showNotification('success', 'Backup criado com sucesso!');
+    */
   };
 
   const handleImportData = async () => {
+    // TODO: Implementar importAllData no CaixaContextSupabase
+    await showNotification('warning', 'Funcionalidade em desenvolvimento');
+    /*
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
@@ -83,43 +136,8 @@ export const Dashboard: React.FC = () => {
     };
     
     input.click();
+    */
   };
-
-  const stats = useMemo(() => calculateStats(transactions, movements), [transactions, movements]);
-  const monthlySummary = useMemo(() => getMonthlySummary(transactions, movements), [transactions, movements]);
-  const bestAndWorst = useMemo(() => getBestAndWorstMonths(monthlySummary), [monthlySummary]);
-  const realTimeFixedExpenses = useMemo(() => calculateRealTimeFixedExpenses(movements), [movements]);
-  const movementCounts = useMemo(() => getMovementCounts(movements), [movements]);
-  const paidFixedExpensesThisMonth = useMemo(() => calculatePaidFixedExpensesThisMonth(movements), [movements]);
-  const pendingCount = useMemo(() => getPendingCount(movements), [movements]);
-  const monthlyFixedIncome = useMemo(() => calculateMonthlyFixedIncome(movements), [movements]);
-  const endOfMonthForecast = useMemo(() => calculateEndOfMonthForecast(movements), [movements]);
-  const evolutionData = useMemo(() => getFixedIncomeVsExpenseEvolution(movements, evolutionPeriod), [movements, evolutionPeriod]);
-  const monthlyPayables = useMemo(() => getMonthlyPayables(movements), [movements]);
-  const monthlyReceivables = useMemo(() => getMonthlyReceivables(movements), [movements]);
-
-  const chartData = monthlySummary.map(m => ({
-    ...m,
-    month: getMonthName(m.month),
-    monthKey: m.month,
-  }));
-
-  const categoryData = useMemo(() => getQuantityByCategory(transactions, movements), [transactions, movements]);
-
-  const gainsByCategoryData = useMemo(() => getGainsByCategory(transactions, movements), [transactions, movements]);
-
-  const classificacaoData = useMemo(() => [
-    { name: 'Gasto Fixo', value: stats.fixoSaida },
-    { name: 'Gasto Temporário', value: stats.temporarioSaida },
-  ].filter(item => item.value > 0), [stats]);
-
-  const salesCountData = useMemo(() => getSalesCountByMonth(transactions, movements), [transactions, movements]);
-
-  const evolutionChartData = evolutionData.map(item => ({
-    month: getMonthName(item.month),
-    'Renda Fixa': item.rendaFixa,
-    'Gastos Fixos': item.gastoFixo,
-  }));
 
   // Verifica se há dados
   const hasData = transactions.length > 0 || movements.length > 0;
@@ -165,19 +183,19 @@ export const Dashboard: React.FC = () => {
                 <div className={styles.summaryGrid}>
                   <div className={styles.summaryItem}>
                     <span className={styles.summaryLabel}>Movimentações:</span>
-                    <span className={styles.summaryValue}>{getDataSummary().totalMovements}</span>
+                    <span className={styles.summaryValue}>{movements.length}</span>
                   </div>
                   <div className={styles.summaryItem}>
                     <span className={styles.summaryLabel}>Transações:</span>
-                    <span className={styles.summaryValue}>{getDataSummary().totalTransactions}</span>
+                    <span className={styles.summaryValue}>{transactions.length}</span>
                   </div>
                   <div className={styles.summaryItem}>
                     <span className={styles.summaryLabel}>Tamanho:</span>
-                    <span className={styles.summaryValue}>{getDataSummary().dataSize}</span>
+                    <span className={styles.summaryValue}>{((JSON.stringify(movements).length + JSON.stringify(transactions).length) / 1024).toFixed(2)} KB</span>
                   </div>
                   <div className={styles.summaryItem}>
                     <span className={styles.summaryLabel}>Última atualização:</span>
-                    <span className={styles.summaryValue}>{getDataSummary().lastUpdate}</span>
+                    <span className={styles.summaryValue}>{new Date().toLocaleDateString('pt-BR')}</span>
                   </div>
                 </div>
               </div>
@@ -375,11 +393,11 @@ export const Dashboard: React.FC = () => {
 
         <div className={styles.classificationCard}>
           <div className={styles.classificationHeader}>
-            <h3>⏱️ Gasto Temporário</h3>
-            <span className={styles.temporarioBadge}>Ocasional</span>
+            <h3>⏱️ Gasto Ocasional</h3>
+            <span className={styles.ocasionalBadge}>Ocasional</span>
           </div>
-          <div className={`${styles.classificationValue} ${styles.temporarioColor}`}>
-            {formatCurrency(stats.temporarioSaida)}
+          <div className={`${styles.classificationValue} ${styles.ocasionalColor}`}>
+            {formatCurrency(stats.ocasionalSaida)}
           </div>
           <p className={styles.classificationDesc}>Despesas não recorrentes</p>
         </div>

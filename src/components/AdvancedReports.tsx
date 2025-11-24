@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useCaixa } from '../context/CaixaContext';
+import { useCaixa } from '../context/CaixaContextSupabase';
 import { formatCurrency, formatDate } from '../utils/calculations';
 import { exportAdvancedReportToPDF, exportAdvancedReportToCSV, exportAdvancedReportToExcel } from '../utils/exportUtils';
 import { Download } from 'lucide-react';
@@ -68,18 +68,6 @@ export const AdvancedReports: React.FC = () => {
       categories.set(m.category, current + m.amount);
     });
     return Array.from(categories.entries()).map(([name, value]) => ({ name, value }));
-  }, [filteredOverdueItems]);
-
-  const overduesByPriority = useMemo(() => {
-    if (filteredOverdueItems.length === 0) return [];
-    const priorities = new Map<string, number>();
-    filteredOverdueItems.forEach(m => {
-      const current = priorities.get(m.priority) || 0;
-      priorities.set(m.priority, current + m.amount);
-    });
-    return Array.from(priorities.entries())
-      .map(([name, value]) => ({ name: name === 'alta' ? '🔴 Alta' : name === 'média' ? '🟡 Média' : '🟢 Baixa', value }))
-      .sort((a, b) => b.value - a.value);
   }, [filteredOverdueItems]);
 
   const forecastChartData = useMemo(() => {
@@ -286,30 +274,6 @@ export const AdvancedReports: React.FC = () => {
             </div>
           )}
 
-          {overduesByPriority.length > 0 && (
-            <div className={styles.chartWrapper}>
-              <h3>⚡ Atrasados por Prioridade</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={overduesByPriority}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip formatter={(value) => formatCurrency(value as number)} />
-                  <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="value" 
-                    stroke="#e67e22" 
-                    strokeWidth={3}
-                    name="Valor"
-                    dot={{ r: 5, fill: '#e67e22' }}
-                    activeDot={{ r: 7 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          )}
-
           {/* Tabela de Itens Atrasados */}
           {filteredOverdueItems.length > 0 && (
             <div className={styles.tableWrapper}>
@@ -321,7 +285,6 @@ export const AdvancedReports: React.FC = () => {
                     <th>Entrada em Atraso</th>
                     <th>Descrição</th>
                     <th>Categoria</th>
-                    <th>Prioridade</th>
                     <th>Tipo</th>
                     <th>Parcelas Atrasadas</th>
                     <th>Valor Original</th>
@@ -341,11 +304,6 @@ export const AdvancedReports: React.FC = () => {
                         <td className={styles.overdueHighlight}>{formatDate(overdueDate)}</td>
                         <td>{item.description}</td>
                         <td>{item.category}</td>
-                        <td>
-                          {item.priority === 'alta' && '🔴 Alta'}
-                          {item.priority === 'média' && '🟡 Média'}
-                          {item.priority === 'baixa' && '🟢 Baixa'}
-                        </td>
                         <td>
                           {item.type === 'entrada' ? '📥 Entrada' : '📤 Saída'}
                         </td>
@@ -581,9 +539,6 @@ export const AdvancedReports: React.FC = () => {
 
                   <div className={styles.dueDetails}>
                     <span className={styles.dueCategory}>📁 {item.movement.category}</span>
-                    <span className={styles.duePriority}>
-                      {item.movement.priority === 'alta' ? '🔴 Alta' : item.movement.priority === 'média' ? '🟡 Média' : '🟢 Baixa'}
-                    </span>
                     <span className={styles.dueInstallment}>
                       📊 Parcela {item.installment.number}/{item.installment.totalInstallments}
                     </span>

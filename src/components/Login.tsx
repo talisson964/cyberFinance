@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff } from 'lucide-react';
 import styles from './Login.module.css';
-import financePng from './imgs/Finance app-bro.png';
 
 export const Login: React.FC = () => {
   const { signIn, signUp, resetPassword } = useAuth();

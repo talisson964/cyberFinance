@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { useCaixa } from '../context/CaixaContext';
+import { useCaixa } from '../context/CaixaContextSupabase';
 import type { Transaction } from '../types';
 import { formatCurrency, formatDate } from '../utils/calculations';
 import { Trash2, Edit2, Check, X } from 'lucide-react';
+import { ConfirmDialog } from './ConfirmDialog';
+import { useConfirm } from '../hooks/useConfirm';
 import styles from './TransactionList.module.css';
 
 interface EditingState {
@@ -14,8 +16,23 @@ interface EditingState {
 
 export const TransactionList: React.FC = () => {
   const { transactions, deleteTransaction, editTransaction } = useCaixa();
+  const { confirm, confirmState, cancel } = useConfirm();
   const [editing, setEditing] = useState<EditingState>({ id: null, amount: '', category: '', description: '' });
   const [filter, setFilter] = useState<'all' | 'entrada' | 'saida'>('all');
+
+  const handleDelete = async (id: string, description: string) => {
+    const confirmed = await confirm({
+      title: 'Confirmar Exclusão',
+      message: `Tem certeza que deseja deletar a transação "${description}"? Esta ação não pode ser desfeita.`,
+      confirmText: 'Deletar',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (confirmed) {
+      await deleteTransaction(id);
+    }
+  };
 
   const filteredTransactions = filter === 'all'
     ? transactions
@@ -140,7 +157,7 @@ export const TransactionList: React.FC = () => {
                           <Edit2 size={18} />
                         </button>
                         <button
-                          onClick={() => deleteTransaction(transaction.id)}
+                          onClick={() => handleDelete(transaction.id, transaction.description)}
                           className={`${styles.actionBtn} ${styles.deleteBtn}`}
                           title="Deletar"
                         >
@@ -155,6 +172,17 @@ export const TransactionList: React.FC = () => {
           </table>
         </div>
       )}
+      
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        title={confirmState.title}
+        message={confirmState.message}
+        confirmText={confirmState.confirmText}
+        cancelText={confirmState.cancelText}
+        type={confirmState.type}
+        onConfirm={confirmState.onConfirm}
+        onCancel={cancel}
+      />
     </div>
   );
 };

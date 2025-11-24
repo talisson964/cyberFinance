@@ -1,15 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useCaixa } from '../context/CaixaContext';
+import { useCaixa } from '../context/CaixaContextSupabase';
 import { formatCurrency, formatDate, getMovementTypeLabel } from '../utils/calculations';
 import { exportMovementsToPDF, exportMovementsToCSV, exportMovementsToExcel } from '../utils/exportUtils';
 import { Trash2, Check, Edit2, Download, ChevronDown, Search, X } from 'lucide-react';
 import { EditMovementModal } from './EditMovementModal';
 import { PurchaseItemsTooltip } from './PurchaseItemsTooltip';
+import { ConfirmDialog } from './ConfirmDialog';
+import { useConfirm } from '../hooks/useConfirm';
 import styles from './MovementHistory.module.css';
 import type { Movement } from '../types';
 
 export const MovementHistory: React.FC = () => {
   const { movements, deleteMovement, markMovementAsPaid, markInstallmentAsPaid, undoLastInstallmentPayment, undoMarkAsPaid } = useCaixa();
+  const { confirm, confirmState, cancel } = useConfirm();
   const [filter, setFilter] = useState<'all' | 'pending' | 'paid'>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | 'entrada' | 'saida'>('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -25,6 +28,22 @@ export const MovementHistory: React.FC = () => {
   const statusDropdownRef = useRef<HTMLDivElement>(null);
   const typeDropdownRef = useRef<HTMLDivElement>(null);
   const exportDropdownRef = useRef<HTMLDivElement>(null);
+
+  const handleDelete = async (movement: Movement) => {
+    const confirmed = await confirm({
+      title: 'Confirmar Exclusão',
+      message: `Tem certeza que deseja deletar a movimentação "${movement.description}"? Esta ação não pode ser desfeita.`,
+      confirmText: 'Deletar',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (confirmed) {
+      await deleteMovement(movement.id);
+      setDeletedMessage(`✅ Movimentação "${movement.description}" removida do Dashboard`);
+      setTimeout(() => setDeletedMessage(''), 3000);
+    }
+  };
 
   // Fechar dropdowns ao clicar fora
   useEffect(() => {
@@ -328,8 +347,8 @@ export const MovementHistory: React.FC = () => {
                     <td>{getMovementTypeLabel(movement.movementType)}</td>
                     <td>
                       {movement.classification === 'fixo' ? '🔄 Fixo' : ''}
-                      {movement.classification === 'temporario' ? '⏱️ Temporário' : ''}
-                      {movement.classification === 'nenhum' ? '-' : ''}
+                      {movement.classification === 'ocasional' ? '⏱️ Ocasional' : ''}
+                      {movement.classification === 'nenhum' ? '➖ Nenhum' : ''}
                       {getInstallmentText(movement)}
                     </td>
                     <td>
@@ -503,13 +522,7 @@ export const MovementHistory: React.FC = () => {
                       </button>
 
                       <button
-                        onClick={() => {
-                          if (window.confirm(`Tem certeza que deseja deletar a movimentação "${movement.description}"?`)) {
-                            deleteMovement(movement.id);
-                            setDeletedMessage(`✅ Movimentação "${movement.description}" removida do Dashboard`);
-                            setTimeout(() => setDeletedMessage(''), 3000);
-                          }
-                        }}
+                        onClick={() => handleDelete(movement)}
                         className={`${styles.actionBtn} ${styles.deleteBtn}`}
                         title="Deletar"
                       >
@@ -584,6 +597,18 @@ export const MovementHistory: React.FC = () => {
           setEditingMovement(null);
         }}
         onSuccess={handleEditSuccess}
+      />
+
+      {/* Dialog de Confirmação */}
+      <ConfirmDialog
+        isOpen={confirmState.isOpen}
+        title={confirmState.title}
+        message={confirmState.message}
+        confirmText={confirmState.confirmText}
+        cancelText={confirmState.cancelText}
+        type={confirmState.type}
+        onConfirm={confirmState.onConfirm}
+        onCancel={cancel}
       />
     </div>
   );
