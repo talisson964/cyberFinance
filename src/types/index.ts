@@ -27,6 +27,7 @@ export type SaidaSubcategory =
   | 'impostos'
   | 'manutencao'
   | 'escritorio'
+  | 'materiais'
   | 'consultorias'
   | 'outra_saida';
 

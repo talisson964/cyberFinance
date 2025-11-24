@@ -28,6 +28,7 @@ const SAIDA_SUBCATEGORIES: { value: SaidaSubcategory; label: string }[] = [
   { value: 'impostos', label: '📋 Impostos' },
   { value: 'manutencao', label: '🔨 Manutenção' },
   { value: 'escritorio', label: '📑 Material de Escritório' },
+  { value: 'materiais', label: '📦 Materiais' },
   { value: 'consultorias', label: '📞 Consultorias' },
   { value: 'outra_saida', label: '❓ Outra Saída' },
 ];
