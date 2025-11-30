@@ -11,10 +11,14 @@ const LOWERCASE_WORDS = ['de', 'da', 'do', 'das', 'dos', 'e', 'ou', 'a', 'o', 'a
 export function capitalizeText(text: string): string {
   if (!text || typeof text !== 'string') return text;
 
+  // Preservar espaços múltiplos usando regex ao invés de split
   return text
     .trim()
-    .split(' ')
-    .map((word, index) => {
+    .replace(/\S+/g, (word, offset) => {
+      // Calcular se é a primeira palavra (offset 0 ou após espaços)
+      const textBeforeWord = text.substring(0, offset).trim();
+      const isFirstWord = textBeforeWord.length === 0;
+      
       const lowerWord = word.toLowerCase();
       
       // Verificar se é um acrônimo conhecido
@@ -24,15 +28,14 @@ export function capitalizeText(text: string): string {
       }
 
       // Verificar se é preposição/artigo (exceto no início)
-      if (index > 0 && LOWERCASE_WORDS.includes(lowerWord)) {
+      if (!isFirstWord && LOWERCASE_WORDS.includes(lowerWord)) {
         return lowerWord;
       }
 
       // Capitalizar primeira letra
       if (word.length === 0) return word;
       return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-    })
-    .join(' ');
+    });
 }
 
 /**

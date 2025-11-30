@@ -316,7 +316,7 @@ export const MovementForm: React.FC = () => {
             id="description"
             type="text"
             value={description}
-            onChange={(e) => setDescription(capitalizeText(e.target.value))}
+            onChange={(e) => setDescription(e.target.value)}
             onBlur={(e) => setDescription(capitalizeText(e.target.value))}
             placeholder="Descreva a movimentação"
             required
