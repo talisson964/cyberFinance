@@ -39,7 +39,20 @@ export const useMovements = () => {
       if (fetchError) throw fetchError;
 
       // Transformar dados do Supabase para o formato da aplicação
-      const formattedMovements: Movement[] = (data || []).map(item => ({
+      const formattedMovements: Movement[] = (data || []).map(item => {
+        // Garantir que datas sejam interpretadas corretamente (sem conversão de timezone)
+        let formattedDate = item.date;
+        if (item.date && typeof item.date === 'string') {
+          // Se a data vier com timestamp ou timezone, extrair apenas a parte da data
+          formattedDate = item.date.split('T')[0];
+        }
+
+        let formattedDueDate = item.due_date;
+        if (item.due_date && typeof item.due_date === 'string') {
+          formattedDueDate = item.due_date.split('T')[0];
+        }
+
+        return {
         id: item.id,
         transactionId: item.transaction_id,
         type: item.type as TransactionType,
@@ -48,7 +61,7 @@ export const useMovements = () => {
         category: item.category,
         subcategory: item.subcategory as EntradaSubcategory | SaidaSubcategory | undefined,
         description: item.description,
-        date: item.date,
+        date: formattedDate,
         timestamp: item.timestamp,
         classification: item.classification as ExpenseClassification,
         status: item.status,
@@ -57,7 +70,7 @@ export const useMovements = () => {
         partialPaidAmount: item.partial_paid_amount ? parseFloat(item.partial_paid_amount) : undefined,
         lastPaymentDate: item.last_payment_date,
         reminderDate: item.reminder_date,
-        dueDate: item.due_date,
+        dueDate: formattedDueDate,
         isOverdue: item.is_overdue,
         overdueAmount: item.overdue_amount ? parseFloat(item.overdue_amount) : undefined,
         notes: item.notes,
@@ -68,7 +81,8 @@ export const useMovements = () => {
         totalInstallments: item.total_installments,
         paidInstallments: item.paid_installments,
         purchaseItems: item.purchase_items,
-      }));
+      };
+      });
 
       setMovements(formattedMovements);
       setError(null);
@@ -119,8 +133,11 @@ export const useMovements = () => {
       };
 
       // Adicionar due_date apenas se existir (para compatibilidade)
+      // Garantir que a data seja salva corretamente sem ajuste de timezone
       if (movement.dueDate) {
-        insertData.due_date = movement.dueDate;
+        // Forçar a data a ser interpretada como local, não UTC
+        const [year, month, day] = movement.dueDate.split('-');
+        insertData.due_date = `${year}-${month}-${day}`;
       }
 
       const { data, error: insertError } = await supabase

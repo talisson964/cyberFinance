@@ -121,6 +121,8 @@ export interface DashboardStats {
   pendente: number;
   aReceber: number;
   aPagar: number;
+  totalGeralGastos: number;
+  totalGeralGanhos: number;
 }
 
 export interface MonthlySummary {

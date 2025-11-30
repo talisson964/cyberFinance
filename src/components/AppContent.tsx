@@ -93,12 +93,6 @@ export const AppContent: React.FC = () => {
               className="close-btn"
               onClick={() => setSidebarOpen(false)}
             >
-              {sidebarPinned ? <PinOff size={20} /> : <Pin size={20} />}
-            </button>
-            <button
-              className="close-btn"
-              onClick={() => setSidebarOpen(false)}
-            >
               <X size={24} />
             </button>
           </div>

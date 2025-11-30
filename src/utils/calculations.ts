@@ -112,6 +112,16 @@ export const calculateStats = (transactions: Transaction[], movements: Movement[
       return sum + (m.amount - (m.partialPaidAmount || 0));
     }, 0);
 
+  // Total geral de gastos (incluindo pagos, pendentes e parcelas futuras)
+  const totalGeralGastos = movements
+    .filter(m => m.type === 'saida')
+    .reduce((sum, m) => sum + m.amount, 0);
+
+  // Total geral de ganhos (incluindo recebidos, a receber e parcelas futuras)
+  const totalGeralGanhos = movements
+    .filter(m => m.type === 'entrada')
+    .reduce((sum, m) => sum + m.amount, 0);
+
   return {
     totalEntrada: totalEntradaFinal,
     totalSaida: totalSaidaFinal,
@@ -145,6 +155,8 @@ export const calculateStats = (transactions: Transaction[], movements: Movement[
     pendente,
     aReceber,
     aPagar,
+    totalGeralGastos,
+    totalGeralGanhos,
   };
 };
 

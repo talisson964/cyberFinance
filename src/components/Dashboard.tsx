@@ -275,6 +275,7 @@ export const Dashboard: React.FC = () => {
           <div className={`${styles.cardValue} ${styles.positive}`}>
             {formatCurrency(stats.totalEntrada)}
           </div>
+          <p className={styles.cardDescription}>Total de entrada até o momento</p>
         </div>
 
         <div className={styles.card}>
@@ -284,6 +285,27 @@ export const Dashboard: React.FC = () => {
           <div className={`${styles.cardValue} ${styles.negative}`}>
             {formatCurrency(stats.totalSaida)}
           </div>
+          <p className={styles.cardDescription}>Total de saída até o momento</p>
+        </div>
+
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h3>📊 Total Geral de Ganhos</h3>
+          </div>
+          <div className={`${styles.cardValue} ${styles.positive}`}>
+            {formatCurrency(stats.totalGeralGanhos || 0)}
+          </div>
+          <p className={styles.cardDescription}>Incluindo pagos, pendentes e futuros</p>
+        </div>
+
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h3>📊 Total Geral de Gastos</h3>
+          </div>
+          <div className={`${styles.cardValue} ${styles.negative}`}>
+            {formatCurrency(stats.totalGeralGastos || 0)}
+          </div>
+          <p className={styles.cardDescription}>Incluindo pagos, pendentes e futuros</p>
         </div>
 
         <div className={`${styles.card} ${styles.forecastCard}`}>
