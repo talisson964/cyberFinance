@@ -76,6 +76,7 @@ export const MovementForm: React.FC = () => {
   const [fixedExpenseDuration, setFixedExpenseDuration] = useState('');
   const [cardBank, setCardBank] = useState('');
   const [purchaseItems, setPurchaseItems] = useState<PurchaseItem[]>([]);
+  const [dueDate, setDueDate] = useState('');
 
   const subcategories = type === 'entrada' ? ENTRADA_SUBCATEGORIES : SAIDA_SUBCATEGORIES;
 
@@ -129,6 +130,13 @@ export const MovementForm: React.FC = () => {
       finalNotes = finalNotes ? `${finalNotes}\n\nBanco: ${cardBank}` : `Banco: ${cardBank}`;
     }
 
+    // Adicionar data de vencimento nas notas (para cartão não parcelado e boleto)
+    if (dueDate && !isParcelado && (movementType === 'cartao_credito' || movementType === 'boleto')) {
+      const dueDateFormatted = new Date(dueDate).toLocaleDateString('pt-BR');
+      const dueDateLabel = movementType === 'boleto' ? 'Vencimento do Boleto' : 'Vencimento da Fatura';
+      finalNotes = finalNotes ? `${finalNotes}\n\n${dueDateLabel}: ${dueDateFormatted}` : `${dueDateLabel}: ${dueDateFormatted}`;
+    }
+
     const result = await addMovement(
       type,
       movementType,
@@ -156,6 +164,7 @@ export const MovementForm: React.FC = () => {
     setFixedExpenseDuration('');
     setCardBank('');
     setPurchaseItems([]);
+    setDueDate('');
     setMovementDate(new Date().toISOString().split('T')[0]);
     
     // Mostrar notificação apropriada
@@ -375,6 +384,23 @@ export const MovementForm: React.FC = () => {
               <label htmlFor="isParceladoCredito">📅 Parcelar no cartão</label>
             </div>
 
+            {!isParcelado && (
+              <div className={styles.formGroup}>
+                <label htmlFor="dueDateCredito">
+                  Data de Vencimento (opcional)
+                  <small style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '12px', marginTop: '4px' }}>
+                    Data de vencimento da fatura do cartão
+                  </small>
+                </label>
+                <input
+                  id="dueDateCredito"
+                  type="date"
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
+                />
+              </div>
+            )}
+
             {isParcelado && (
               <div className={styles.installmentFields}>
                 <div className={styles.formGroup}>
@@ -455,6 +481,24 @@ export const MovementForm: React.FC = () => {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Data de Vencimento para Boleto */}
+        {movementType === 'boleto' && (
+          <div className={styles.formGroup}>
+            <label htmlFor="dueDateBoleto">
+              📅 Data de Vencimento
+              <small style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '12px', marginTop: '4px' }}>
+                Data de vencimento do boleto
+              </small>
+            </label>
+            <input
+              id="dueDateBoleto"
+              type="date"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+            />
           </div>
         )}
 
