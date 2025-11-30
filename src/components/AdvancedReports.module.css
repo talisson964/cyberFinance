@@ -384,6 +384,50 @@
   background: var(--bg-tertiary);
 }
 
+.clickableRow {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clickableRow:hover {
+  background: var(--bg-tertiary);
+  transform: translateX(2px);
+}
+
+.expandedRow {
+  background: var(--bg-secondary) !important;
+}
+
+.expandedContent {
+  padding: 20px;
+  border-top: 2px solid var(--border-color);
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.detailItem strong {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detailItem span {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
 .atrasadoBadge {
   background: #c0392b;
   color: white;

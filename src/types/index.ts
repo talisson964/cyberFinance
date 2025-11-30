@@ -90,6 +90,7 @@ export interface Movement {
   
   // Lembretes e alertas
   reminderDate?: string;
+  dueDate?: string; // Data de vencimento extraída das notas ou das parcelas
   isOverdue: boolean;
   overdueAmount?: number;
   notes?: string;

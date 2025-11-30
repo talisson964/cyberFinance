@@ -77,6 +77,9 @@ export const MovementForm: React.FC = () => {
   const [cardBank, setCardBank] = useState('');
   const [purchaseItems, setPurchaseItems] = useState<PurchaseItem[]>([]);
   const [dueDate, setDueDate] = useState('');
+  const [useQuantity, setUseQuantity] = useState(false);
+  const [quantity, setQuantity] = useState('1');
+  const [unitPrice, setUnitPrice] = useState('');
 
   const subcategories = type === 'entrada' ? ENTRADA_SUBCATEGORIES : SAIDA_SUBCATEGORIES;
 
@@ -87,6 +90,17 @@ export const MovementForm: React.FC = () => {
       setAmount(total.toFixed(2));
     }
   }, [purchaseItems, type, subcategory]);
+
+  // Calcular valor total baseado em quantidade e valor unitário
+  useEffect(() => {
+    if (type === 'saida' && useQuantity && quantity && unitPrice) {
+      const qty = parseFloat(quantity);
+      const price = parseFloat(unitPrice);
+      if (qty > 0 && price > 0) {
+        setAmount((qty * price).toFixed(2));
+      }
+    }
+  }, [quantity, unitPrice, useQuantity, type]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,6 +151,14 @@ export const MovementForm: React.FC = () => {
       finalNotes = finalNotes ? `${finalNotes}\n\n${dueDateLabel}: ${dueDateFormatted}` : `${dueDateLabel}: ${dueDateFormatted}`;
     }
 
+    // Adicionar informações de quantidade nas notas
+    if (type === 'saida' && useQuantity && quantity && unitPrice) {
+      const qty = parseFloat(quantity);
+      const price = parseFloat(unitPrice);
+      const quantityInfo = `Quantidade: ${qty} un\nValor Unitário: R$ ${price.toFixed(2)}\nValor Total: R$ ${numAmount.toFixed(2)}`;
+      finalNotes = finalNotes ? `${finalNotes}\n\n${quantityInfo}` : quantityInfo;
+    }
+
     const result = await addMovement(
       type,
       movementType,
@@ -149,7 +171,8 @@ export const MovementForm: React.FC = () => {
       isParcelado ? calculatedFirstInstallmentDate : undefined,
       finalNotes || undefined,
       fixedExpenseDuration ? parseInt(fixedExpenseDuration) : undefined,
-      type === 'saida' && subcategory === 'fornecedores' && purchaseItems.length > 0 ? purchaseItems : undefined
+      type === 'saida' && subcategory === 'fornecedores' && purchaseItems.length > 0 ? purchaseItems : undefined,
+      dueDate || undefined
     );
 
     // Limpar formulário
@@ -165,6 +188,9 @@ export const MovementForm: React.FC = () => {
     setCardBank('');
     setPurchaseItems([]);
     setDueDate('');
+    setUseQuantity(false);
+    setQuantity('1');
+    setUnitPrice('');
     setMovementDate(new Date().toISOString().split('T')[0]);
     
     // Mostrar notificação apropriada
@@ -266,14 +292,73 @@ export const MovementForm: React.FC = () => {
             onChange={(e) => setAmount(e.target.value)}
             placeholder="0.00"
             required
-            disabled={type === 'saida' && subcategory === 'fornecedores' && purchaseItems.length > 0}
+            disabled={(type === 'saida' && subcategory === 'fornecedores' && purchaseItems.length > 0) || (type === 'saida' && useQuantity)}
           />
           {type === 'saida' && subcategory === 'fornecedores' && purchaseItems.length > 0 && (
             <small style={{ color: 'var(--text-secondary)', marginTop: '4px', display: 'block' }}>
               Valor calculado automaticamente pela soma dos itens
             </small>
           )}
+          {type === 'saida' && useQuantity && quantity && unitPrice && (
+            <small style={{ color: 'var(--text-secondary)', marginTop: '4px', display: 'block' }}>
+              Valor calculado: {quantity} × R$ {parseFloat(unitPrice).toFixed(2)} = R$ {amount}
+            </small>
+          )}
         </div>
+
+        {/* Quantidade e Valor Unitário (apenas para saída e não fornecedores) */}
+        {type === 'saida' && subcategory !== 'fornecedores' && (
+          <div className={styles.formGroup}>
+            <div className={styles.checkboxGroup}>
+              <input
+                id="useQuantity"
+                type="checkbox"
+                checked={useQuantity}
+                onChange={(e) => {
+                  setUseQuantity(e.target.checked);
+                  if (!e.target.checked) {
+                    setQuantity('1');
+                    setUnitPrice('');
+                    setAmount('');
+                  }
+                }}
+              />
+              <label htmlFor="useQuantity">📦 Produto com múltiplas unidades</label>
+            </div>
+
+            {useQuantity && (
+              <div className={styles.installmentFields}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="quantity">Quantidade *</label>
+                  <input
+                    id="quantity"
+                    type="number"
+                    step="1"
+                    min="1"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    placeholder="1"
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="unitPrice">Valor Unitário (R$) *</label>
+                  <input
+                    id="unitPrice"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={unitPrice}
+                    onChange={(e) => setUnitPrice(e.target.value)}
+                    placeholder="0.00"
+                    required
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Categoria */}
         <div className={styles.formGroup}>

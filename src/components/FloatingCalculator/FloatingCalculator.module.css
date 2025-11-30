@@ -172,8 +172,8 @@
 
 @media (max-width: 768px) {
   .calculatorContainer {
-    bottom: 20px;
-    right: 20px;
+    bottom: 15px;
+    right: 15px;
   }
 
   .floatingBtn {
@@ -183,8 +183,12 @@
   }
 
   .calculatorModal {
-    width: 240px;
-    bottom: 70px;
+    position: fixed;
+    width: calc(100vw - 30px);
+    max-width: 320px;
+    bottom: 75px;
+    right: 15px;
+    left: auto;
     padding: 12px;
   }
 
@@ -205,11 +209,27 @@
 }
 
 @media (max-width: 480px) {
+  .calculatorContainer {
+    bottom: 10px;
+    right: 10px;
+  }
+
   .calculatorModal {
-    width: calc(100vw - 40px);
-    bottom: auto;
-    top: 50%;
-    right: 50%;
-    transform: translate(50%, -50%);
+    position: fixed;
+    width: calc(100vw - 20px);
+    max-width: 300px;
+    bottom: 70px;
+    right: 10px;
+    left: auto;
+    transform: none;
+  }
+
+  .buttons {
+    gap: 5px;
+  }
+
+  .btn {
+    padding: 8px;
+    font-size: 0.85rem;
   }
 }

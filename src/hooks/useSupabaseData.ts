@@ -57,6 +57,7 @@ export const useMovements = () => {
         partialPaidAmount: item.partial_paid_amount ? parseFloat(item.partial_paid_amount) : undefined,
         lastPaymentDate: item.last_payment_date,
         reminderDate: item.reminder_date,
+        dueDate: item.due_date,
         isOverdue: item.is_overdue,
         overdueAmount: item.overdue_amount ? parseFloat(item.overdue_amount) : undefined,
         notes: item.notes,
@@ -84,43 +85,54 @@ export const useMovements = () => {
     if (!user) throw new Error('Usuário não autenticado');
 
     try {
+      // Preparar dados para inserção (sem due_date por enquanto se não for suportado)
+      const insertData: any = {
+        user_id: user.id,
+        transaction_id: movement.transactionId,
+        type: movement.type,
+        movement_type: movement.movementType,
+        amount: movement.amount,
+        category: movement.category,
+        subcategory: movement.subcategory,
+        description: movement.description,
+        date: movement.date,
+        timestamp: movement.timestamp,
+        classification: movement.classification,
+        status: movement.status,
+        is_paid: movement.isPaid,
+        paid_date: movement.paidDate,
+        partial_paid_amount: movement.partialPaidAmount,
+        last_payment_date: movement.lastPaymentDate,
+        reminder_date: movement.reminderDate,
+        is_overdue: movement.isOverdue,
+        overdue_amount: movement.overdueAmount,
+        notes: movement.notes,
+        attachment_url: movement.attachmentUrl,
+        comprovante: movement.comprovante,
+        fixed_expense_duration: movement.fixedExpenseDuration,
+        installments: movement.installments,
+        total_installments: movement.totalInstallments,
+        paid_installments: movement.paidInstallments,
+        purchase_items: movement.purchaseItems,
+        payment_method: movement.movementType,
+        bank: '',
+      };
+
+      // Adicionar due_date apenas se existir (para compatibilidade)
+      if (movement.dueDate) {
+        insertData.due_date = movement.dueDate;
+      }
+
       const { data, error: insertError } = await supabase
         .from('movements')
-        .insert({
-          user_id: user.id,
-          transaction_id: movement.transactionId,
-          type: movement.type,
-          movement_type: movement.movementType,
-          amount: movement.amount,
-          category: movement.category,
-          subcategory: movement.subcategory,
-          description: movement.description,
-          date: movement.date,
-          timestamp: movement.timestamp,
-          classification: movement.classification,
-          status: movement.status,
-          is_paid: movement.isPaid,
-          paid_date: movement.paidDate,
-          partial_paid_amount: movement.partialPaidAmount,
-          last_payment_date: movement.lastPaymentDate,
-          reminder_date: movement.reminderDate,
-          is_overdue: movement.isOverdue,
-          overdue_amount: movement.overdueAmount,
-          notes: movement.notes,
-          attachment_url: movement.attachmentUrl,
-          comprovante: movement.comprovante,
-          fixed_expense_duration: movement.fixedExpenseDuration,
-          installments: movement.installments,
-          total_installments: movement.totalInstallments,
-          paid_installments: movement.paidInstallments,
-          purchase_items: movement.purchaseItems,
-          payment_method: movement.movementType,
-          bank: '',
-        })
+        .insert(insertData)
         .select()
         .single();
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.error('Erro ao inserir movimentação:', insertError);
+        throw insertError;
+      }
 
       // Atualizar estado local
       await fetchMovements();
@@ -154,6 +166,7 @@ export const useMovements = () => {
           ...(updates.partialPaidAmount !== undefined && { partial_paid_amount: updates.partialPaidAmount }),
           ...(updates.lastPaymentDate && { last_payment_date: updates.lastPaymentDate }),
           ...(updates.reminderDate && { reminder_date: updates.reminderDate }),
+          ...(updates.dueDate && { due_date: updates.dueDate }),
           ...(updates.isOverdue !== undefined && { is_overdue: updates.isOverdue }),
           ...(updates.overdueAmount !== undefined && { overdue_amount: updates.overdueAmount }),
           ...(updates.notes && { notes: updates.notes }),

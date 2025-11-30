@@ -21,6 +21,23 @@ import type {
   MonthlySummary
 } from '../types';
 
+// Função auxiliar para extrair data de vencimento das notas
+const extractDueDateFromNotes = (notes?: string): string | undefined => {
+  if (!notes) return undefined;
+  
+  // Procurar por "Vencimento do Boleto: DD/MM/AAAA" ou "Vencimento da Fatura: DD/MM/AAAA"
+  const regex = /Vencimento (?:do Boleto|da Fatura): (\d{2})\/(\d{2})\/(\d{4})/;
+  const match = notes.match(regex);
+  
+  if (match) {
+    const [, day, month, year] = match;
+    // Converter para formato YYYY-MM-DD
+    return `${year}-${month}-${day}`;
+  }
+  
+  return undefined;
+};
+
 interface CaixaContextType {
   transactions: Transaction[];
   movements: Movement[];
@@ -174,6 +191,98 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const loading = loadingMovements || loadingTransactions || migrating;
 
+  // Processar movimentos para calcular atrasos baseados em dueDate
+  useEffect(() => {
+    const processOverdueStatus = async () => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      for (const movement of movements) {
+        if (movement.isPaid) continue;
+
+        let shouldUpdate = false;
+        let isCurrentlyOverdue = false;
+
+        try {
+          // 1. Verificar se tem dueDate (cartão de crédito não parcelado ou boleto)
+          if (movement.dueDate) {
+            // Parse da data de vencimento garantindo formato correto
+            const dueDateStr = movement.dueDate;
+            const [year, month, day] = dueDateStr.split('-').map(Number);
+            const dueDate = new Date(year, month - 1, day);
+            dueDate.setHours(0, 0, 0, 0);
+            
+            // Debug: log as datas
+            console.log('Movement:', movement.description);
+            console.log('DueDate string:', dueDateStr);
+            console.log('DueDate parsed:', dueDate.toLocaleDateString('pt-BR'));
+            console.log('Today:', today.toLocaleDateString('pt-BR'));
+            console.log('Is overdue?', dueDate < today);
+            
+            // Está atrasado apenas se a data de vencimento JÁ PASSOU (menor que hoje)
+            isCurrentlyOverdue = dueDate < today;
+            
+            if (movement.isOverdue !== isCurrentlyOverdue) {
+              shouldUpdate = true;
+            }
+          }
+          // 2. Verificar parcelas
+          else if (movement.installments && movement.installments.length > 0) {
+            const hasOverdueInstallment = movement.installments.some(inst => {
+              if (inst.isPaid) return false;
+              const dueDateStr = inst.dueDate;
+              const [year, month, day] = dueDateStr.split('-').map(Number);
+              const instDueDate = new Date(year, month - 1, day);
+              instDueDate.setHours(0, 0, 0, 0);
+              // Está atrasado apenas se a data de vencimento JÁ PASSOU
+              return instDueDate < today;
+            });
+            
+            isCurrentlyOverdue = hasOverdueInstallment;
+            
+            if (movement.isOverdue !== isCurrentlyOverdue) {
+              shouldUpdate = true;
+            }
+          }
+          // 3. Sem data de vencimento específica, NÃO considerar atrasado automaticamente
+          else {
+            // Não marcar como atrasado se não tiver data de vencimento definida
+            isCurrentlyOverdue = false;
+            
+            if (movement.isOverdue !== isCurrentlyOverdue) {
+              shouldUpdate = true;
+            }
+          }
+
+          // Atualizar se necessário
+          if (shouldUpdate) {
+            console.log(`Updating movement ${movement.description}: isOverdue = ${isCurrentlyOverdue}`);
+            try {
+              await updateMovementHook(movement.id, {
+                isOverdue: isCurrentlyOverdue,
+              });
+              console.log(`✓ Successfully updated ${movement.description}`);
+            } catch (updateError) {
+              console.error('❌ Failed to update:', updateError);
+              // Silenciar erro se for problema de coluna não existente
+              const errorMessage = updateError instanceof Error ? updateError.message : '';
+              if (!errorMessage.includes('due_date') && !errorMessage.includes('column')) {
+                console.error('Erro ao atualizar status de atraso:', updateError);
+              }
+            }
+          }
+        } catch (error) {
+          // Erro ao processar movimento individual - continuar com o próximo
+          console.error(`Erro ao processar movimento ${movement.id}:`, error);
+        }
+      }
+    };
+
+    if (movements.length > 0 && !loadingMovements) {
+      processOverdueStatus();
+    }
+  }, [movements.length, loadingMovements]); // Executar quando movimentos ou loading mudarem
+
   // Verificar se já houve migração
   useEffect(() => {
     const migrationStatus = localStorage.getItem('migration_completed');
@@ -276,7 +385,8 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     firstInstallmentDate?: string,
     notes?: string,
     fixedExpenseDuration?: number,
-    purchaseItems?: PurchaseItem[]
+    purchaseItems?: PurchaseItem[],
+    dueDate?: string
   ): Promise<{ merged: boolean; itemCount?: number }> => {
     const movementDate = date || new Date().toISOString().split('T')[0];
     const timestamp = new Date(movementDate).getTime();
@@ -353,6 +463,7 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       notes,
       fixedExpenseDuration,
       purchaseItems,
+      dueDate: dueDate || extractDueDateFromNotes(notes),
       ...(shouldMarkAsPaid && { paidDate }),
       ...(installments && {
         installments,

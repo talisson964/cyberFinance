@@ -8,11 +8,15 @@ import { DebtConfiguration } from './DebtConfiguration';
 import { RateSimulator, PercentageCalculator, InvestmentForecast } from './Tools';
 import { OverdueWarningSystem } from './OverdueWarningSystem';
 import { ThemeToggle } from './ThemeToggle';
-import { BarChart2, Menu, X, CreditCard, ChevronDown, FileText, Wrench, LogOut } from 'lucide-react';
+import { BarChart2, Menu, X, CreditCard, ChevronDown, FileText, Wrench, LogOut, Pin, PinOff } from 'lucide-react';
 
 export const AppContent: React.FC = () => {
   const { user, loading, signOut } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarPinned, setSidebarPinned] = useState(() => {
+    const saved = localStorage.getItem('sidebarPinned');
+    return saved ? JSON.parse(saved) : false;
+  });
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const location = useLocation();
 
@@ -50,7 +54,9 @@ export const AppContent: React.FC = () => {
   };
 
   const handleSubMenuClick = () => {
-    setSidebarOpen(false);
+    if (!sidebarPinned) {
+      setSidebarOpen(false);
+    }
     setOpenMenu(null);
   };
 
@@ -59,19 +65,43 @@ export const AppContent: React.FC = () => {
     setSidebarOpen(false);
   };
 
+  const toggleSidebarPin = () => {
+    const newPinnedState = !sidebarPinned;
+    setSidebarPinned(newPinnedState);
+    localStorage.setItem('sidebarPinned', JSON.stringify(newPinnedState));
+    if (newPinnedState) {
+      setSidebarOpen(true);
+    }
+  };
+
   return (
     <div className="app">
       <OverdueWarningSystem />
       {/* Sidebar */}
-      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+      <aside className={`sidebar ${sidebarOpen || sidebarPinned ? 'open' : ''} ${sidebarPinned ? 'pinned' : ''}`}>
         <div className="sidebar-header">
           <h1>💼 Caixa</h1>
-          <button
-            className="close-btn"
-            onClick={() => setSidebarOpen(false)}
-          >
-            <X size={24} />
-          </button>
+          <div className="sidebar-header-buttons">
+            <button
+              className="pin-btn"
+              onClick={toggleSidebarPin}
+              title={sidebarPinned ? 'Desafixar menu' : 'Fixar menu'}
+            >
+              {sidebarPinned ? <PinOff size={20} /> : <Pin size={20} />}
+            </button>
+            <button
+              className="close-btn"
+              onClick={() => setSidebarOpen(false)}
+            >
+              {sidebarPinned ? <PinOff size={20} /> : <Pin size={20} />}
+            </button>
+            <button
+              className="close-btn"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <X size={24} />
+            </button>
+          </div>
         </div>
 
         {/* User Info */}
@@ -286,7 +316,7 @@ export const AppContent: React.FC = () => {
       </div>
 
       {/* Overlay para fechar sidebar em mobile */}
-      {sidebarOpen && (
+      {(sidebarOpen && !sidebarPinned) && (
         <div
           className="overlay"
           onClick={() => setSidebarOpen(false)}

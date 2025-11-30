@@ -588,3 +588,98 @@
     transform: translateY(0);
   }
 }
+
+/* Estilos para botão de expansão e detalhes */
+.expandIconBtn {
+  background: none;
+  border: none;
+  color: #667eea;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.expandIconBtn:hover {
+  background: #f0f0f0;
+  transform: scale(1.1);
+}
+
+.expandIconBtn svg {
+  transition: transform 0.3s ease;
+}
+
+.expandIconBtn svg.rotated {
+  transform: rotate(180deg);
+}
+
+.detailsRow {
+  background: #f9fafb;
+  border-left: 4px solid #667eea;
+}
+
+.detailsContainer {
+  padding: 20px;
+  animation: slideDown 0.3s ease-out;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detailLabel {
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detailValue {
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+.purchaseItemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.purchaseItemRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f9fafb;
+  border-radius: 6px;
+  border-left: 3px solid #10b981;
+  font-size: 0.9rem;
+}
+
+.purchaseItemRow span:first-child {
+  font-weight: 600;
+  color: #374151;
+}
+
+.purchaseItemRow span:last-child {
+  color: #6b7280;
+  font-family: monospace;
+}
+

@@ -17,6 +17,7 @@ export const MovementHistory: React.FC = () => {
   const [typeFilter, setTypeFilter] = useState<'all' | 'entrada' | 'saida'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  const [expandedDetails, setExpandedDetails] = useState<Set<string>>(new Set());
   const [deletedMessage, setDeletedMessage] = useState<string>('');
   const [editingMovement, setEditingMovement] = useState<Movement | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -117,6 +118,16 @@ export const MovementHistory: React.FC = () => {
       newExpanded.add(movementId);
     }
     setExpandedRows(newExpanded);
+  };
+
+  const toggleExpandDetails = (movementId: string) => {
+    const newExpanded = new Set(expandedDetails);
+    if (newExpanded.has(movementId)) {
+      newExpanded.delete(movementId);
+    } else {
+      newExpanded.add(movementId);
+    }
+    setExpandedDetails(newExpanded);
   };
 
   const handleEditMovement = (movement: Movement) => {
@@ -329,12 +340,10 @@ export const MovementHistory: React.FC = () => {
           <table className={styles.table}>
             <thead>
               <tr>
+                <th style={{ width: '40px' }}></th>
                 <th>Data</th>
-                <th>Tipo de Pagamento</th>
-                <th>Classificação</th>
-                <th>Categoria</th>
                 <th>Descrição</th>
-                <th>Valor</th>
+                <th>Valor Total</th>
                 <th>Status</th>
                 <th>Ações</th>
               </tr>
@@ -343,122 +352,112 @@ export const MovementHistory: React.FC = () => {
               {filteredMovements.map(movement => (
                 <React.Fragment key={movement.id}>
                   <tr className={`${styles.row} ${getStatusColor(movement.isPaid)}`}>
+                    <td>
+                      <button
+                        onClick={() => toggleExpandDetails(movement.id)}
+                        className={styles.expandIconBtn}
+                        title="Ver mais detalhes"
+                      >
+                        <ChevronDown 
+                          size={18} 
+                          className={expandedDetails.has(movement.id) ? styles.rotated : ''}
+                        />
+                      </button>
+                    </td>
                     <td>{formatDate(movement.date)}</td>
-                    <td>{getMovementTypeLabel(movement.movementType)}</td>
-                    <td>
-                      {movement.classification === 'fixo' ? '🔄 Fixo' : ''}
-                      {movement.classification === 'ocasional' ? '⏱️ Ocasional' : ''}
-                      {movement.classification === 'nenhum' ? '➖ Nenhum' : ''}
-                      {getInstallmentText(movement)}
-                    </td>
-                    <td>
-                      <span className={styles.categoryBadge}>{movement.category}</span>
-                    </td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', position: 'relative' }}>
                         <span>{movement.description}</span>
-                        {movement.purchaseItems && movement.purchaseItems.length > 0 ? (
-                          <>
-                            <PurchaseItemsTooltip 
-                              items={movement.purchaseItems} 
-                              totalAmount={movement.amount}
-                            />
-                            {movement.purchaseItems.length > 1 ? (
-                              <>
-                                <span 
-                                  className={styles.groupedBadge}
-                                  onClick={() => setShowItemsPopup(showItemsPopup === movement.id ? null : movement.id)}
-                                  onMouseEnter={() => setShowItemsPopup(movement.id)}
-                                  onMouseLeave={() => setShowItemsPopup(null)}
-                                  style={{
-                                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                                    color: 'white',
-                                    fontSize: '11px',
-                                    fontWeight: '600',
-                                    padding: '3px 8px',
-                                    borderRadius: '10px',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '0.5px',
-                                    boxShadow: '0 2px 6px rgba(16, 185, 129, 0.3)',
-                                    cursor: 'pointer',
-                                    userSelect: 'none',
-                                    transition: 'all 0.2s ease'
-                                  }}
-                                >
-                                  Agrupado ({movement.purchaseItems.length})
-                                </span>
-                                
-                                {/* Popup flutuante com detalhes dos itens */}
-                                {showItemsPopup === movement.id && (
-                                  <div 
-                                    className={styles.itemsPopup}
-                                    onMouseEnter={() => setShowItemsPopup(movement.id)}
-                                    onMouseLeave={() => setShowItemsPopup(null)}
-                                    style={{
-                                      position: 'absolute',
-                                      top: '100%',
-                                      left: '50%',
-                                      transform: 'translateX(-50%)',
-                                      marginTop: '8px',
-                                      backgroundColor: 'white',
-                                      border: '2px solid #10b981',
-                                      borderRadius: '8px',
-                                      padding: '12px',
-                                      boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
-                                      zIndex: 9999,
-                                      minWidth: '320px',
-                                      maxWidth: '400px',
-                                      pointerEvents: 'auto'
-                                    }}
-                                  >
-                                    <div style={{ fontSize: '14px', fontWeight: '700', marginBottom: '10px', color: '#1e293b', borderBottom: '2px solid #10b981', paddingBottom: '6px' }}>
-                                      📦 Itens da compra
-                                    </div>
-                                    {movement.purchaseItems.map((item, idx) => (
-                                      <div 
-                                        key={idx}
-                                        style={{
-                                          padding: '8px 0',
-                                          borderBottom: idx < movement.purchaseItems!.length - 1 ? '1px solid #e5e7eb' : 'none',
-                                          fontSize: '13px',
-                                          display: 'flex',
-                                          justifyContent: 'space-between',
-                                          alignItems: 'flex-start',
-                                          gap: '12px'
-                                        }}
-                                      >
-                                        <div style={{ flex: 1 }}>
-                                          <div style={{ fontWeight: '600', color: '#1e293b', marginBottom: '3px' }}>
-                                            {item.name}
-                                          </div>
-                                          <div style={{ fontSize: '11px', color: '#64748b' }}>
-                                            {item.quantity} unidade{item.quantity > 1 ? 's' : ''} × {formatCurrency(item.unitPrice)}
-                                          </div>
-                                        </div>
-                                        <div style={{ fontWeight: '700', color: '#10b981', whiteSpace: 'nowrap', fontSize: '14px' }}>
-                                          {formatCurrency(item.total)}
-                                        </div>
-                                      </div>
-                                    ))}
-                                    <div style={{
-                                      marginTop: '12px',
-                                      paddingTop: '12px',
-                                      borderTop: '2px solid #10b981',
-                                      display: 'flex',
-                                      justifyContent: 'space-between',
-                                      fontWeight: '700',
-                                      fontSize: '15px',
-                                      color: '#1e293b'
-                                    }}>
-                                      <span>Total Geral:</span>
-                                      <span style={{ color: '#10b981', fontSize: '16px' }}>{formatCurrency(movement.amount)}</span>
-                                    </div>
+                        {movement.purchaseItems && movement.purchaseItems.length > 1 && (
+                          <span 
+                            className={styles.groupedBadge}
+                            onClick={() => setShowItemsPopup(showItemsPopup === movement.id ? null : movement.id)}
+                            onMouseEnter={() => setShowItemsPopup(movement.id)}
+                            onMouseLeave={() => setShowItemsPopup(null)}
+                            style={{
+                              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                              color: 'white',
+                              fontSize: '11px',
+                              fontWeight: '600',
+                              padding: '3px 8px',
+                              borderRadius: '10px',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px',
+                              boxShadow: '0 2px 6px rgba(16, 185, 129, 0.3)',
+                              cursor: 'pointer',
+                              userSelect: 'none',
+                              transition: 'all 0.2s ease'
+                            }}
+                          >
+                            Agrupado ({movement.purchaseItems.length})
+                          </span>
+                        )}
+                        {showItemsPopup === movement.id && movement.purchaseItems && movement.purchaseItems.length > 1 && (
+                          <div 
+                            className={styles.itemsPopup}
+                            onMouseEnter={() => setShowItemsPopup(movement.id)}
+                            onMouseLeave={() => setShowItemsPopup(null)}
+                            style={{
+                              position: 'absolute',
+                              top: '100%',
+                              left: '50%',
+                              transform: 'translateX(-50%)',
+                              marginTop: '8px',
+                              backgroundColor: 'white',
+                              border: '2px solid #10b981',
+                              borderRadius: '8px',
+                              padding: '12px',
+                              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
+                              zIndex: 9999,
+                              minWidth: '320px',
+                              maxWidth: '400px',
+                              pointerEvents: 'auto'
+                            }}
+                          >
+                            <div style={{ fontSize: '14px', fontWeight: '700', marginBottom: '10px', color: '#1e293b', borderBottom: '2px solid #10b981', paddingBottom: '6px' }}>
+                              📦 Itens da compra
+                            </div>
+                            {movement.purchaseItems.map((item, idx) => (
+                              <div 
+                                key={idx}
+                                style={{
+                                  padding: '8px 0',
+                                  borderBottom: idx < movement.purchaseItems!.length - 1 ? '1px solid #e5e7eb' : 'none',
+                                  fontSize: '13px',
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'flex-start',
+                                  gap: '12px'
+                                }}
+                              >
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ fontWeight: '600', color: '#1e293b', marginBottom: '3px' }}>
+                                    {item.name}
                                   </div>
-                                )}
-                              </>
-                            ) : null}
-                          </>
-                        ) : null}
+                                  <div style={{ fontSize: '11px', color: '#64748b' }}>
+                                    {item.quantity} unidade{item.quantity > 1 ? 's' : ''} × {formatCurrency(item.unitPrice)}
+                                  </div>
+                                </div>
+                                <div style={{ fontWeight: '700', color: '#10b981', whiteSpace: 'nowrap', fontSize: '14px' }}>
+                                  {formatCurrency(item.total)}
+                                </div>
+                              </div>
+                            ))}
+                            <div style={{
+                              marginTop: '12px',
+                              paddingTop: '12px',
+                              borderTop: '2px solid #10b981',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              fontWeight: '700',
+                              fontSize: '15px',
+                              color: '#1e293b'
+                            }}>
+                              <span>Total Geral:</span>
+                              <span style={{ color: '#10b981', fontSize: '16px' }}>{formatCurrency(movement.amount)}</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td className={movement.type === 'entrada' ? styles.positivo : styles.negativo}>
@@ -531,10 +530,63 @@ export const MovementHistory: React.FC = () => {
                     </td>
                   </tr>
 
+                  {/* Linha expandida com detalhes completos */}
+                  {expandedDetails.has(movement.id) && (
+                    <tr className={styles.detailsRow}>
+                      <td colSpan={6}>
+                        <div className={styles.detailsContainer}>
+                          <div className={styles.detailsGrid}>
+                            <div className={styles.detailItem}>
+                              <span className={styles.detailLabel}>Tipo:</span>
+                              <span className={styles.detailValue}>
+                                {movement.type === 'entrada' ? '💰 Entrada' : '💸 Saída'}
+                              </span>
+                            </div>
+                            <div className={styles.detailItem}>
+                              <span className={styles.detailLabel}>Tipo de Pagamento:</span>
+                              <span className={styles.detailValue}>{getMovementTypeLabel(movement.movementType)}</span>
+                            </div>
+                            <div className={styles.detailItem}>
+                              <span className={styles.detailLabel}>Categoria:</span>
+                              <span className={styles.detailValue}>{movement.category}</span>
+                            </div>
+                            <div className={styles.detailItem}>
+                              <span className={styles.detailLabel}>Classificação:</span>
+                              <span className={styles.detailValue}>
+                                {movement.classification === 'fixo' && '🔄 Fixo'}
+                                {movement.classification === 'ocasional' && '⏱️ Ocasional'}
+                                {movement.classification === 'nenhum' && '➖ Nenhum'}
+                              </span>
+                            </div>
+                            {movement.notes && (
+                              <div className={styles.detailItem} style={{ gridColumn: '1 / -1' }}>
+                                <span className={styles.detailLabel}>Anotações:</span>
+                                <span className={styles.detailValue} style={{ whiteSpace: 'pre-wrap' }}>{movement.notes}</span>
+                              </div>
+                            )}
+                            {movement.purchaseItems && movement.purchaseItems.length > 0 && (
+                              <div className={styles.detailItem} style={{ gridColumn: '1 / -1' }}>
+                                <span className={styles.detailLabel}>Itens da Compra:</span>
+                                <div className={styles.purchaseItemsList}>
+                                  {movement.purchaseItems.map((item, idx) => (
+                                    <div key={idx} className={styles.purchaseItemRow}>
+                                      <span>{item.name}</span>
+                                      <span>{item.quantity} un × {formatCurrency(item.unitPrice)} = {formatCurrency(item.total)}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+
                   {/* Expandable row com detalhes das parcelas */}
                   {movement.installments && movement.installments.length > 0 && expandedRows.has(movement.id) && (
                     <tr className={styles.expandedRow}>
-                      <td colSpan={8}>
+                      <td colSpan={6}>
                         <div className={styles.installmentsContainer}>
                           <h4>Detalhes das Parcelas:</h4>
                           <div className={styles.installmentsList}>

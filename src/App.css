@@ -65,6 +65,36 @@ html, body, #root {
   animation: fadeIn 0.5s ease;
 }
 
+.sidebar-header-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pin-btn {
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  line-height: 1;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  display: none; /* Oculto por padrão em desktop */
+  align-items: center;
+  justify-content: center;
+}
+
+.pin-btn:hover {
+  background: rgba(212, 175, 55, 0.25);
+  transform: scale(1.1);
+}
+
+.sidebar.pinned {
+  position: relative;
+  transform: translateX(0) !important;
+}
+
 .sidebar-header h1 {
   font-size: 2rem;
   margin: 0;
@@ -479,8 +509,17 @@ html, body, #root {
     transform: translateX(0);
   }
 
+  .sidebar.pinned {
+    position: fixed;
+    transform: translateX(0) !important;
+  }
+
   .close-btn {
     display: block;
+  }
+
+  .pin-btn {
+    display: flex;
   }
 
   .menu-btn {
@@ -499,6 +538,11 @@ html, body, #root {
     padding: 16px 20px;
   }
 
+  /* Ajustar content quando sidebar estiver fixada */
+  .sidebar.pinned ~ .main-wrapper {
+    margin-left: 280px;
+  }
+
   .app-header h2 {
     font-size: 1.35rem;
   }
@@ -511,6 +555,10 @@ html, body, #root {
 @media (max-width: 480px) {
   .sidebar {
     width: 260px;
+  }
+
+  .sidebar.pinned ~ .main-wrapper {
+    margin-left: 260px;
   }
 
   .sidebar-header h1 {

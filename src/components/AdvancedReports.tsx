@@ -15,6 +15,7 @@ export const AdvancedReports: React.FC = () => {
   const [overdueType, setOverdueType] = useState<'all' | 'receivable' | 'payable'>('all');
   const [installmentType, setInstallmentType] = useState<'all' | 'receivable' | 'payable'>('all');
   const [installmentStatus, setInstallmentStatus] = useState<'all' | 'completed' | 'ongoing'>('all');
+  const [expandedOverdueId, setExpandedOverdueId] = useState<string | null>(null);
 
   // Sincronizar métrica com parâmetro de URL
   useEffect(() => {
@@ -114,7 +115,7 @@ export const AdvancedReports: React.FC = () => {
 
   // Função helper para calcular data de entrada em atraso e contar parcelas atrasadas
   const getOverdueInfo = (item: typeof filteredOverdueItems[0]) => {
-    let overdueDate = item.date;
+    let overdueDate = item.dueDate || item.date; // Usar dueDate se existir, senão usar date
     let overdueCount = 0;
 
     if (item.installments && item.installments.length > 0) {
@@ -281,16 +282,11 @@ export const AdvancedReports: React.FC = () => {
               <table className={styles.table}>
                 <thead>
                   <tr>
+                    <th></th>
                     <th>Data de Vencimento</th>
-                    <th>Entrada em Atraso</th>
                     <th>Descrição</th>
-                    <th>Categoria</th>
-                    <th>Tipo</th>
                     <th>Parcelas Atrasadas</th>
-                    <th>Valor Original</th>
-                    <th>Juros</th>
                     <th>Total com Juros</th>
-                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -298,31 +294,79 @@ export const AdvancedReports: React.FC = () => {
                     const { overdueDate, overdueCount } = getOverdueInfo(item);
                     const interestAmount = calculateInterestAmount(item.id);
                     const totalValue = item.amount + interestAmount;
+                    const isExpanded = expandedOverdueId === item.id;
+                    
                     return (
-                      <tr key={item.id}>
-                        <td>{formatDate(item.date)}</td>
-                        <td className={styles.overdueHighlight}>{formatDate(overdueDate)}</td>
-                        <td>{item.description}</td>
-                        <td>{item.category}</td>
-                        <td>
-                          {item.type === 'entrada' ? '📥 Entrada' : '📤 Saída'}
-                        </td>
-                        <td className={styles.overdueCount}>
-                          {overdueCount > 1 ? `${overdueCount} parcelas` : '1 parcela'}
-                        </td>
-                        <td className={item.type === 'entrada' ? styles.positive : styles.negative}>
-                          {item.type === 'entrada' ? '+' : '-'} {formatCurrency(item.amount)}
-                        </td>
-                        <td className={styles.interest} style={{ color: interestAmount > 0 ? '#e67e22' : '#95a5a6' }}>
-                          {interestAmount > 0 ? `+ ${formatCurrency(interestAmount)}` : '-'}
-                        </td>
-                        <td className={item.type === 'entrada' ? styles.positive : styles.negative} style={{ fontWeight: 'bold' }}>
-                          {item.type === 'entrada' ? '+' : '-'} {formatCurrency(totalValue)}
-                        </td>
-                        <td>
-                          <span className={styles.atrasadoBadge}>⏰ Atrasado</span>
-                        </td>
-                      </tr>
+                      <React.Fragment key={item.id}>
+                        <tr 
+                          className={styles.clickableRow}
+                          onClick={() => setExpandedOverdueId(isExpanded ? null : item.id)}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <td style={{ width: '30px', textAlign: 'center' }}>
+                            {isExpanded ? '▼' : '▶'}
+                          </td>
+                          <td>{formatDate(overdueDate)}</td>
+                          <td>{item.description}</td>
+                          <td className={styles.overdueCount}>
+                            {overdueCount > 1 ? `${overdueCount} parcelas` : '1 parcela'}
+                          </td>
+                          <td className={item.type === 'entrada' ? styles.positive : styles.negative} style={{ fontWeight: 'bold' }}>
+                            {item.type === 'entrada' ? '+' : '-'} {formatCurrency(totalValue)}
+                          </td>
+                        </tr>
+                        
+                        {isExpanded && (
+                          <tr className={styles.expandedRow}>
+                            <td colSpan={5}>
+                              <div className={styles.expandedContent}>
+                                <div className={styles.detailsGrid}>
+                                  <div className={styles.detailItem}>
+                                    <strong>Data da Movimentação:</strong>
+                                    <span>{formatDate(item.date)}</span>
+                                  </div>
+                                  <div className={styles.detailItem}>
+                                    <strong>Categoria:</strong>
+                                    <span>{item.category}</span>
+                                  </div>
+                                  <div className={styles.detailItem}>
+                                    <strong>Tipo:</strong>
+                                    <span>{item.type === 'entrada' ? '📥 Entrada' : '📤 Saída'}</span>
+                                  </div>
+                                  <div className={styles.detailItem}>
+                                    <strong>Valor Original:</strong>
+                                    <span className={item.type === 'entrada' ? styles.positive : styles.negative}>
+                                      {item.type === 'entrada' ? '+' : '-'} {formatCurrency(item.amount)}
+                                    </span>
+                                  </div>
+                                  <div className={styles.detailItem}>
+                                    <strong>Juros Acumulados:</strong>
+                                    <span className={styles.interest} style={{ color: interestAmount > 0 ? '#e67e22' : '#95a5a6' }}>
+                                      {interestAmount > 0 ? `+ ${formatCurrency(interestAmount)}` : 'Sem juros'}
+                                    </span>
+                                  </div>
+                                  <div className={styles.detailItem}>
+                                    <strong>Status:</strong>
+                                    <span className={styles.atrasadoBadge}>⏰ Atrasado</span>
+                                  </div>
+                                  {item.movementType && (
+                                    <div className={styles.detailItem}>
+                                      <strong>Forma de Pagamento:</strong>
+                                      <span>{item.movementType}</span>
+                                    </div>
+                                  )}
+                                  {item.notes && (
+                                    <div className={styles.detailItem} style={{ gridColumn: '1 / -1' }}>
+                                      <strong>Observações:</strong>
+                                      <span>{item.notes}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
                     );
                   })}
                 </tbody>
