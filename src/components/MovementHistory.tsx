@@ -4,7 +4,6 @@ import { formatCurrency, formatDate, getMovementTypeLabel } from '../utils/calcu
 import { exportMovementsToPDF, exportMovementsToCSV, exportMovementsToExcel } from '../utils/exportUtils';
 import { Trash2, Check, Edit2, Download, ChevronDown, Search, X } from 'lucide-react';
 import { EditMovementModal } from './EditMovementModal';
-import { PurchaseItemsTooltip } from './PurchaseItemsTooltip';
 import { ConfirmDialog } from './ConfirmDialog';
 import { useConfirm } from '../hooks/useConfirm';
 import styles from './MovementHistory.module.css';
@@ -142,13 +141,6 @@ export const MovementHistory: React.FC = () => {
 
   const getStatusColor = (isPaid: boolean) => {
     return isPaid ? styles.paid : styles.pending;
-  };
-
-  const getInstallmentText = (movement: Movement) => {
-    if (!movement.installments || !Array.isArray(movement.installments) || movement.installments.length === 0) return '';
-    const paidCount = movement.installments.filter(i => i.isPaid).length;
-    const totalCount = movement.installments.length;
-    return ` (${paidCount}/${totalCount})`;
   };
 
   return (

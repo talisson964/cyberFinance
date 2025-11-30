@@ -823,6 +823,14 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       .filter(m => m.type === 'saida' && !m.isPaid)
       .reduce((sum, m) => sum + m.amount, 0);
 
+    const totalGeralGastos = allMovements
+      .filter(m => m.type === 'saida')
+      .reduce((sum, m) => sum + m.amount, 0);
+
+    const totalGeralGanhos = allMovements
+      .filter(m => m.type === 'entrada')
+      .reduce((sum, m) => sum + m.amount, 0);
+
     return {
       totalEntrada,
       totalSaida,
@@ -836,6 +844,8 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       pendente,
       aReceber,
       aPagar,
+      totalGeralGastos,
+      totalGeralGanhos,
     };
   }, [getMovementsByMonth]);
 
