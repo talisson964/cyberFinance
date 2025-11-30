@@ -173,7 +173,7 @@ export const MovementForm: React.FC = () => {
       finalNotes || undefined,
       fixedExpenseDuration ? parseInt(fixedExpenseDuration) : undefined,
       type === 'saida' && subcategory === 'fornecedores' && purchaseItems.length > 0 ? purchaseItems : undefined,
-      (type === 'saida' && (movementType === 'cartao_credito' || movementType === 'boleto') && dueDate) ? dueDate : undefined
+      (movementType === 'cartao_credito' || movementType === 'boleto') ? dueDate : undefined
     );
 
     // Limpar formulário

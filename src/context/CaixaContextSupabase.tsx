@@ -75,7 +75,8 @@ interface CaixaContextType {
     firstInstallmentDate?: string,
     notes?: string,
     fixedExpenseDuration?: number,
-    purchaseItems?: PurchaseItem[]
+    purchaseItems?: PurchaseItem[],
+    dueDate?: string
   ) => Promise<{ merged: boolean; itemCount?: number }>;
   
   addMultipleMovements: (movements: Array<{
@@ -823,13 +824,13 @@ export const CaixaProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       .filter(m => m.type === 'saida' && !m.isPaid)
       .reduce((sum, m) => sum + m.amount, 0);
 
-    const totalGeralGastos = allMovements
-      .filter(m => m.type === 'saida')
-      .reduce((sum, m) => sum + m.amount, 0);
+    const totalGeralGastos = movements
+      .filter((m: Movement) => m.type === 'saida')
+      .reduce((sum: number, m: Movement) => sum + m.amount, 0);
 
-    const totalGeralGanhos = allMovements
-      .filter(m => m.type === 'entrada')
-      .reduce((sum, m) => sum + m.amount, 0);
+    const totalGeralGanhos = movements
+      .filter((m: Movement) => m.type === 'entrada')
+      .reduce((sum: number, m: Movement) => sum + m.amount, 0);
 
     return {
       totalEntrada,
