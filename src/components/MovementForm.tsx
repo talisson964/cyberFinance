@@ -57,6 +57,7 @@ const BANCOS_CARTAO = [
   'Banco Pan',
   'Porto Seguro',
   'Will Bank',
+  'Mercado Pago',
   'Outro',
 ];
 
